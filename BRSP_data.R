@@ -92,6 +92,7 @@ sum(df$r2011)
 sum(df$r2012)
 sum(df$r2013)
 
+#subset routes with surveys in each of the 5 years:
 
 
 
