@@ -110,19 +110,79 @@ BRSP_5km<-gBuffer(BRSP_Routes, width = 5000, byid = TRUE, id=BRSP_Routes@data$Ro
 plot(BRSP_5km, add = TRUE)
 summary(BRSP_5km)
 
+BRSP_4km<-gBuffer(BRSP_Routes, width = 4000, byid = TRUE, id=BRSP_Routes@data$RouteID)
+plot(BRSP_4km, add = TRUE)
+summary(BRSP_4km)
+
+BRSP_8km<-gBuffer(BRSP_Routes, width = 8000, byid = TRUE, id=BRSP_Routes@data$RouteID)
+plot(BRSP_8km, add = TRUE)
+summary(BRSP_8km)
 
 #extract gap lc values for buffer:
 start.time = Sys.time()
 e400m<-extract(Gaplc_west, BRSP_400m)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
-
-start.time = Sys.time()
 e400mTable<-lapply(e400m, table)
 end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
 paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 
-head(e400mTable)
+start.time = Sys.time()
+e1km<-extract(Gaplc_west, BRSP_1km)
+e1kmTable<-lapply(e1km, table)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+start.time = Sys.time()
+e5km<-extract(Gaplc_west, BRSP_5km)
+e5kmTable<-lapply(e5km, table)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 
-test<-extract(Gaplc_west, BRSP_breeding, method = 'simple')
-test<-as.matrix(table(values(Gaplc_west)))
+start.time = Sys.time()
+e4km<-extract(Gaplc_west, BRSP_4km)
+e4kmTable<-lapply(e4km, table)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+
+start.time = Sys.time()
+e8km<-extract(Gaplc_west, BRSP_8km)
+e8kmTable<-lapply(e8km, table)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+
+# convert to data frame
+e400mdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e400mTable, length)),
+                   cover = names(unlist(e400mTable)),
+                   count = unlist(e400mTable)
+)
+head(e400mdf)
+e1kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e1kmTable, length)),
+                      cover = names(unlist(e1kmTable)),
+                      count = unlist(e1kmTable)
+)
+head(e1kmdf)
+
+e5kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e5kmTable, length)),
+                      cover = names(unlist(e5kmTable)),
+                      count = unlist(e5kmTable)
+)
+head(e5kmdf)
+
+e20kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e20kmTable, length)),
+                     cover = names(unlist(e20kmTable)),
+                     count = unlist(e20kmTable)
+)
+head(e20kmdf)
+
+e4kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e4kmTable, length)),
+                      cover = names(unlist(e4kmTable)),
+                      count = unlist(e4kmTable)
+)
+head(e4kmdf)
+
+e8kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e8kmTable, length)),
+                      cover = names(unlist(e8kmTable)),
+                      count = unlist(e8kmTable)
+)
+head(e8kmdf)
+
+# test<-extract(Gaplc_west, BRSP_breeding, method = 'simple')
+# test<-as.matrix(table(values(Gaplc_west)))
