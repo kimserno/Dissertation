@@ -95,7 +95,11 @@ sum(df$r2013)
 #subset routes with surveys in each of the 5 years:
 Sroutes<-subset(df, sum == 5, select = c(allroutes, sum))
 
-
+brsp09<-subset(routes2009, AOU == 5620)
+brsp10<-subset(routes2010, AOU == 5620)
+brsp11<-subset(routes2011, AOU == 5620)
+brsp12<-subset(routes2012, AOU == 5620)
+brsp13<-subset(routes2013, AOU == 5620)
 
 
 
