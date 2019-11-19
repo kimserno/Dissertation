@@ -43,25 +43,28 @@ setwd("~/Dropbox/Baylor/PhD/Dissertation")
 # paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 # r2r11<-mosaic(R2, R11, fun = mean)
 #brsp_GDB<-"C:/Users/kim_serno1/Documents/GIS_projects/Dissertation/data/BRSP.gdb"
-# brsp_GDB<-"C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/BRSP.gdb"
-brsp_GDB<-"~/Dropbox/Baylor/PhD/GIS/BRSP.gdb"
+# brsp_GDB<-"~/Dropbox/Baylor/PhD/GIS/BRSP.gdb"
+
+
+brsp_GDB<-"C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/BRSP.gdb"
 
 
 subset(ogrDrivers(), grepl("GDB", name))
 fc_list<-ogrListLayers(brsp_GDB)
 print(fc_list)
 
-us<-readOGR(dsn=brsp_GDB, layer = "US_48States")
-plot(us)
-summary(us)
-
 BRSP_breeding<-readOGR(dsn=brsp_GDB, layer = "BRSP_BreedingUS")
 plot(BRSP_breeding)
-summary(BRSP_breeding)
+#summary(BRSP_breeding)
+
+us<-readOGR(dsn=brsp_GDB, layer = "US_48States")
+plot(us, add=TRUE)
+#summary(us)
+
 
 BRSP_routes<-readOGR(dsn=brsp_GDB, layer = "BBS_routes_BRSP")
 plot(BRSP_routes, add = TRUE)
-summary(BRSP_routes)
+#summary(BRSP_routes)
 
 BRSP_mincenter<-readOGR(dsn=brsp_GDB, layer = "BRSP_MinimumBound_center")
 plot(BRSP_mincenter, add = TRUE)
