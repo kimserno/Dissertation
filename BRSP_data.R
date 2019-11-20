@@ -1,6 +1,7 @@
 
 
 library(tidyverse)
+library(matrixStats)
 
 # setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/BBS_manipulation")
 
@@ -98,17 +99,32 @@ Sroutes<-subset(df, sum == 5, select = c(allroutes, sum))
 names(Sroutes)<-c("RouteID", "sum")
 
 #extract BRSP survey data from each year
-brsp09<-subset(routes2009, AOU == 5620)
-brsp10<-subset(routes2010, AOU == 5620)
-brsp11<-subset(routes2011, AOU == 5620)
-brsp12<-subset(routes2012, AOU == 5620)
-brsp13<-subset(routes2013, AOU == 5620)
+brsp09<-subset(routes2009, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp10<-subset(routes2010, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp11<-subset(routes2011, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp12<-subset(routes2012, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp13<-subset(routes2013, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+names(brsp09)<-c("RouteID", "AOU", "Ab09")
+names(brsp10)<-c("RouteID", "AOU", "Ab10")
+names(brsp11)<-c("RouteID", "AOU", "Ab11")
+names(brsp12)<-c("RouteID", "AOU", "Ab12")
+names(brsp13)<-c("RouteID", "AOU", "Ab13")
 
 
 #join data 
-
-
-
+BRSPab<-left_join(Sroutes, brsp09, by = "RouteID")
+BRSPab<-left_join(BRSPab, brsp10, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp11, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp12, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp13, by = c("RouteID", "AOU"))
+BRSPab[is.na(BRSPab)]<-0
+BRSPab<-BRSPab %>% 
+  mutate(Totalab = rowSums(.[,4:8])) %>% 
+  mutate(Aveab = rowMeans(.[,4:8])) %>% 
+  mutate(Stdev = apply(.[,4:8], 1, sd)) %>% 
+  mutate(CoV = Stdev/Aveab)
+BRSPab$CoV[is.nan(BRSPab$CoV)]<-0
+head(BRSPab)
 
 
 
