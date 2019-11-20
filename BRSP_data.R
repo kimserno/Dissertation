@@ -11,7 +11,7 @@ head(BBSroutes)
 
 BBSroutes$RouteID<-((BBSroutes$StateNum*1000)+BBSroutes$Route)
 head(BBSroutes)
-write.csv(BBSroutes, file = "BBS_routes.csv")
+write.csv(BBSroutes, file = "BBS_manipulation/data_files/Unzipped/BBS_routes.csv")
 
 BRSP_BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/BRSP_BBSroutes2.csv")
 head(BRSP_BBSroutes)
