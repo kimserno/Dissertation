@@ -53,26 +53,28 @@ subset(ogrDrivers(), grepl("GDB", name))
 fc_list<-ogrListLayers(brsp_GDB)
 print(fc_list)
 
-BRSP_breeding<-readOGR(dsn=brsp_GDB, layer = "BRSP_BreedingUS")
+BRSP_breeding<-readOGR(dsn="C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/Shapefiles", layer = "BRSP_BreedingUS")
 plot(BRSP_breeding)
 #summary(BRSP_breeding)
 
-us<-readOGR(dsn=brsp_GDB, layer = "US_48States")
+us<-readOGR(dsn="C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/Shapefiles", layer = "US_48States")
 plot(us, add=TRUE)
 #summary(us)
 
 
-BRSP_routes<-readOGR(dsn=brsp_GDB, layer = "BBS_routes_BRSP")
+BRSP_routes<-readOGR(dsn="C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/Shapefiles", layer = "BBS_routes_BRSP")
 plot(BRSP_routes, add = TRUE)
 #summary(BRSP_routes)
 
-BRSP_mincenter<-readOGR(dsn=brsp_GDB, layer = "BRSP_MinimumBound_center")
-plot(BRSP_mincenter, add = TRUE)
-summary(BRSP_mincenter)
+# BRSP_mincenter<-readOGR(dsn="C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/Shapefiles", layer = "BRSP_MinimumBound_center")
+# plot(BRSP_mincenter, add = TRUE)
+# summary(BRSP_mincenter)
 
 # Load in Gap Landcover west raster (creation code above)
 # Gaplc_west<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/GIS/unzipped/gap_landcover/Gaplc_West_raster.tif")
-Gaplc_west<-raster("~/Dropbox/Baylor/PhD/GIS/unzipped/gap_landcover/Gaplc_West_raster.tif")
+# Gaplc_west<-raster("~/Dropbox/Baylor/PhD/GIS/unzipped/gap_landcover/Gaplc_West_raster.tif")
+
+Gaplc_west<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/gap_landcover/Gaplc_West_raster.tif")
 
 # Get projection information for gap landcover raster:
 CRS_gap<-proj4string(Gaplc_west)
@@ -189,3 +191,29 @@ head(e8kmdf)
 
 # test<-extract(Gaplc_west, BRSP_breeding, method = 'simple')
 # test<-as.matrix(table(values(Gaplc_west)))
+
+
+# VegDRI
+
+July2813<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week30_072813.tif")
+# plot(July2813)
+proj4string(July2813)
+July28_13<-projectRaster(July2813, crs = CRS_gap)
+proj4string(July28_13)
+summary(July28_13@data@values)
+#check visually
+plot(BRSP_Breeding)
+plot(July28_13, add= TRUE)
+plot(BRSP_Routes, add = TRUE)
+plot(BRSP_Breeding, add = TRUE)
+July28_13[is.na(July28_13[])]<-0
+summary(July28_13@data@values)
+dim(July28_13)
+
+test<-July28_13
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+test<-reclassify(test, rcl2)
+plot(test)
+summary(test@data@values)
+test[test == 0]<-NA
