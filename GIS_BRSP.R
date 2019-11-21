@@ -43,7 +43,7 @@ setwd("~/Dropbox/Baylor/PhD/Dissertation")
 # paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 # r2r11<-mosaic(R2, R11, fun = mean)
 #brsp_GDB<-"C:/Users/kim_serno1/Documents/GIS_projects/Dissertation/data/BRSP.gdb"
-# brsp_GDB<-"~/Dropbox/Baylor/PhD/GIS/BRSP.gdb"
+brsp_GDB<-"~/Dropbox/Baylor/PhD/GIS/BRSP.gdb"
 
 
 brsp_GDB<-"C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/BRSP.gdb"

@@ -1,19 +1,20 @@
 
 
 library(tidyverse)
+library(matrixStats)
 
-setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/BBS_manipulation")
+# setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/BBS_manipulation")
 
 
 #subset routes to those in Great Plains US
-BBSroutes<-read.csv("data_files/Unzipped/routes.csv")
+BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/routes.csv")
 head(BBSroutes)
 
 BBSroutes$RouteID<-((BBSroutes$StateNum*1000)+BBSroutes$Route)
 head(BBSroutes)
-write.csv(BBSroutes, file = "BBS_routes.csv")
+write.csv(BBSroutes, file = "BBS_manipulation/data_files/Unzipped/BBS_routes.csv")
 
-BRSP_BBSroutes<-read.csv("data_files/Unzipped/BRSP_BBSroutes2.csv")
+BRSP_BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/BRSP_BBSroutes2.csv")
 head(BRSP_BBSroutes)
 
 BRSProutes<-left_join(x=BRSP_BBSroutes, y=BRSP_BBSroutes, by ="RouteID")
@@ -22,21 +23,21 @@ head(BRSProutes)
 
 #State BBS data:
 #import states:
-Arizona<-read.csv("data_files/Unzipped/BBS_states/Arizona.csv")
-California<-read.csv("data_files/Unzipped/BBS_states/Califor.csv")
-Colorado<-read.csv("data_files/Unzipped/BBS_states/Colorad.csv")
-Idaho<-read.csv("data_files/Unzipped/BBS_states/Idaho.csv")
-Kansas<-read.csv("data_files/Unzipped/BBS_states/Kansas.csv")
-Montana<-read.csv("data_files/Unzipped/BBS_states/Montana.csv")
-NDakota<-read.csv("data_files/Unzipped/BBS_states/NDakota.csv")
-Nebraska<-read.csv("data_files/Unzipped/BBS_states/Nebrask.csv")
-Nevada<-read.csv("data_files/Unzipped/BBS_states/Nevada.csv")
-NMexico<-read.csv("data_files/Unzipped/BBS_states/NMexico.csv")
-Oregon<-read.csv("data_files/Unzipped/BBS_states/Oregon.csv")
-SDakota<-read.csv("data_files/Unzipped/BBS_states/SDakota.csv")
-Utah<-read.csv("data_files/Unzipped/BBS_states/Utah.csv")
-Washington<-read.csv("data_files/Unzipped/BBS_states/Washing.csv")
-Wyoming<-read.csv("data_files/Unzipped/BBS_states/Wyoming.csv")
+Arizona<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Arizona.csv")
+California<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Califor.csv")
+Colorado<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Colorad.csv")
+Idaho<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Idaho.csv")
+Kansas<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Kansas.csv")
+Montana<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Montana.csv")
+NDakota<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/NDakota.csv")
+Nebraska<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Nebrask.csv")
+Nevada<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Nevada.csv")
+NMexico<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/NMexico.csv")
+Oregon<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Oregon.csv")
+SDakota<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/SDakota.csv")
+Utah<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Utah.csv")
+Washington<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Washing.csv")
+Wyoming<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Wyoming.csv")
 
 #subset to states of interest
 SGstates<-rbind(Arizona, California, Colorado, Idaho, Kansas, Montana, NDakota, Nebraska, Nevada, NMexico, Oregon, SDakota, Utah, Washington, Wyoming)
@@ -94,18 +95,36 @@ sum(df$r2013)
 
 #subset routes with surveys in each of the 5 years:
 Sroutes<-subset(df, sum == 5, select = c(allroutes, sum))
+#rename allroutes to RouteID to match data files:
+names(Sroutes)<-c("RouteID", "sum")
 
-brsp09<-subset(routes2009, AOU == 5620)
-brsp10<-subset(routes2010, AOU == 5620)
-brsp11<-subset(routes2011, AOU == 5620)
-brsp12<-subset(routes2012, AOU == 5620)
-brsp13<-subset(routes2013, AOU == 5620)
+#extract BRSP survey data from each year
+brsp09<-subset(routes2009, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp10<-subset(routes2010, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp11<-subset(routes2011, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp12<-subset(routes2012, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+brsp13<-subset(routes2013, AOU == 5620, select = c(RouteID, AOU, SpeciesTotal))
+names(brsp09)<-c("RouteID", "AOU", "Ab09")
+names(brsp10)<-c("RouteID", "AOU", "Ab10")
+names(brsp11)<-c("RouteID", "AOU", "Ab11")
+names(brsp12)<-c("RouteID", "AOU", "Ab12")
+names(brsp13)<-c("RouteID", "AOU", "Ab13")
 
 
-
-
-
-
+#join data 
+BRSPab<-left_join(Sroutes, brsp09, by = "RouteID")
+BRSPab<-left_join(BRSPab, brsp10, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp11, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp12, by = c("RouteID", "AOU"))
+BRSPab<-left_join(BRSPab, brsp13, by = c("RouteID", "AOU"))
+BRSPab[is.na(BRSPab)]<-0
+BRSPab<-BRSPab %>% 
+  mutate(Totalab = rowSums(.[,4:8])) %>% 
+  mutate(Aveab = rowMeans(.[,4:8])) %>% 
+  mutate(Stdev = apply(.[,4:8], 1, sd)) %>% 
+  mutate(CoV = Stdev/Aveab)
+BRSPab$CoV[is.nan(BRSPab$CoV)]<-0
+head(BRSPab)
 
 
 
