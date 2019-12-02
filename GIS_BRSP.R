@@ -331,13 +331,63 @@ winter12<-mosaic(oct11r, nov11r, dec11r, jan12r, feb12r, mar12r, apr12r, fun = s
 winter13<-mosaic(oct12r, nov12r, dec12r, jan13r, feb13r, mar13r, apr13r, fun = sum)
 winter_mean<-mosaic(winter09, winter10, winter11, winter12, winter13, fun = mean)
 Winter_Means<-projectRaster(winter_mean, crs = CRS_gap)
+
+precipWinter<-BRSP_Routes@data[c(2, 16)]
 #extract raster values and mean across buffer
 start.time = Sys.time()
-ewm400m<-extract(winter_mean, BRSP_400m, fun = mean, df = TRUE)
+ewm400m<-extract(Winter_Means, BRSP_400m, fun = mean, df = TRUE)
 end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
 paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 
 
+precipWinter<-cbind(precipWinter, ewm400m)
+precipWinter<-precipWinter[c(1,2,4)]
+names(precipWinter)<-c("RTENAME", "RouteID", "wm400m")
+
+start.time = Sys.time()
+ewm1km<-extract(Winter_Means, BRSP_1km, fun = mean, df = TRUE)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+
+precipWinter<-cbind(precipWinter, ewm1km)
+precipWinter<-precipWinter[c(1:3,5)]
+names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km")
+
+
+start.time = Sys.time()
+ewm4km<-extract(Winter_Means, BRSP_4km, fun = mean, df = TRUE)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+
+precipWinter<-cbind(precipWinter, ewm4km)
+precipWinter<-precipWinter[c(1:4,6)]
+names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km")
+
+
+start.time = Sys.time()
+ewm5km<-extract(Winter_Means, BRSP_5km, fun = mean, df = TRUE)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+precipWinter<-cbind(precipWinter, ewm5km)
+precipWinter<-precipWinter[c(1:5,7)]
+names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km")
+
+start.time = Sys.time()
+ewm8km<-extract(Winter_Means, BRSP_8km, fun = mean, df = TRUE)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+precipWinter<-cbind(precipWinter, ewm8km)
+precipWinter<-precipWinter[c(1:6,8)]
+names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km")
+
+start.time = Sys.time()
+ewm20km<-extract(Winter_Means, BRSP_20km, fun = mean, df = TRUE)
+end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
+paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+
+precipWinter<-cbind(precipWinter, ewm20km)
+precipWinter<-precipWinter[c(1:7,9)]
+names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km", "pwm20km")
 
 
 
