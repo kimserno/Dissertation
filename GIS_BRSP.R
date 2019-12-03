@@ -5,6 +5,8 @@ library(raster)
 library(sp)
 library(prism)
 library(rgeos)
+library(matrixStats)
+library(data.table)
 #setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation")
 setwd("~/Dropbox/Baylor/PhD/Dissertation")
 
@@ -205,8 +207,432 @@ e8kmdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e8kmTable, length)),
 )
 head(e8kmdf)
 
-# test<-extract(Gaplc_west, BRSP_breeding, method = 'simple')
-# test<-as.matrix(table(values(Gaplc_west)))
+#spread the dataframes out:-----
+##400m buffer ----
+glc400m<-e400mdf %>% 
+  spread(key=cover, value=count)
+glc400m<-setnames(glc400m, paste0("x",names(glc400m)))
+colnames(glc400m)[1]<-"RouteID"
+glc400m[is.na(glc400m)]<-0
+glc400m<-mutate(.data = glc400m, Sum = rowSums(glc400m[,2:230]))
+#subset out landcover of interest values only:
+lc400m<-glc400m %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV400m<-glc400m %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV400m<-glc400m %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD400m<-glc400m %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>% 
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499,  x545) %>% 
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV400m<-glc400m %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>% 
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317,  x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>% 
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc400m<-left_join(SHV400m, DSD400m, by = "RouteID")
+Broadlc400m<-left_join(Broadlc400m, ADV400m, by = "RouteID")
+Broadlc400m<-left_join(Broadlc400m, ISNV400m, by = "RouteID")
+head(Broadlc400m)
+lc400m<-left_join(lc400m, Broadlc400m, by = "RouteID")
+head(lc400m)
+###get proportions of landcover of interest: -----
+lc400m<-lc400m %>% 
+  mutate(p312_400m = (x312/Sum)*100) %>% 
+  mutate(p316_400m = (x316/Sum)*100) %>% 
+  mutate(p437_400m = (x437/Sum)*100) %>% 
+  mutate(p484_400m = (x484/Sum)*100) %>% 
+  mutate(p485_400m = (x485/Sum)*100) %>% 
+  mutate(p488_400m = (x488/Sum)*100) %>% 
+  mutate(p489_400m = (x489/Sum)*100) %>% 
+  mutate(p490_400m = (x490/Sum)*100) %>% 
+  mutate(p491_400m = (x491/Sum)*100) %>% 
+  mutate(p492_400m = (x492/Sum)*100) %>% 
+  mutate(p493_400m = (x493/Sum)*100) %>% 
+  mutate(p495_400m = (x495/Sum)*100) %>% 
+  mutate(p498_400m = (x498/Sum)*100) %>% 
+  mutate(p556_400m = (x556/Sum)*100) %>% 
+  mutate(p557_400m = (x557/Sum)*100) %>% 
+  mutate(p558_400m = (x558/Sum)*100) %>% 
+  mutate(pSHV_400m = (SHV/Sum)*100) %>% 
+  mutate(pDSD_400m = (DSD/Sum)*100) %>% 
+  mutate(pADV_400m = (ADV/Sum)*100) %>% 
+  mutate(pISNV_400m = (ISNV/Sum)*100) 
+  
+
+head(lc400m)
+
+##1km buffer ----
+glc1km<-e1kmdf %>% 
+  spread(key=cover, value=count)
+glc1km<-setnames(glc1km, paste0("x",names(glc1km)))
+colnames(glc1km)[1]<-"RouteID"
+glc1km[is.na(glc1km)]<-0
+glc1km<-mutate(.data = glc1km, Sum = rowSums(glc1km[,2:230]))
+#subset out landcover of interest values only:
+lc1km<-glc1km %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV1km<-glc1km %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV1km<-glc1km %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD1km<-glc1km %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>%
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x545) %>%
+  
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV1km<-glc1km %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>%
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381,  x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>%
+  
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc1km<-left_join(SHV1km, DSD1km, by = "RouteID")
+Broadlc1km<-left_join(Broadlc1km, ADV1km, by = "RouteID")
+Broadlc1km<-left_join(Broadlc1km, ISNV1km, by = "RouteID")
+head(Broadlc1km)
+lc1km<-left_join(lc1km, Broadlc1km, by = "RouteID")
+head(lc1km)
+###get proportions of landcover of interest: -----
+lc1km<-lc1km %>% 
+  mutate(p312_1km = (x312/Sum)*100) %>% 
+  mutate(p316_1km = (x316/Sum)*100) %>% 
+  mutate(p437_1km = (x437/Sum)*100) %>% 
+  mutate(p484_1km = (x484/Sum)*100) %>% 
+  mutate(p485_1km = (x485/Sum)*100) %>% 
+  mutate(p488_1km = (x488/Sum)*100) %>% 
+  mutate(p489_1km = (x489/Sum)*100) %>% 
+  mutate(p490_1km = (x490/Sum)*100) %>% 
+  mutate(p491_1km = (x491/Sum)*100) %>% 
+  mutate(p492_1km = (x492/Sum)*100) %>% 
+  mutate(p493_1km = (x493/Sum)*100) %>% 
+  mutate(p495_1km = (x495/Sum)*100) %>% 
+  mutate(p498_1km = (x498/Sum)*100) %>% 
+  mutate(p556_1km = (x556/Sum)*100) %>% 
+  mutate(p557_1km = (x557/Sum)*100) %>% 
+  mutate(p558_1km = (x558/Sum)*100) %>% 
+  mutate(pSHV_1km = (SHV/Sum)*100) %>% 
+  mutate(pDSD_1km = (DSD/Sum)*100) %>% 
+  mutate(pADV_1km = (ADV/Sum)*100) %>% 
+  mutate(pISNV_1km = (ISNV/Sum)*100) 
+
+
+head(lc1km)
+
+
+##4km buffer ----
+glc4km<-e4kmdf %>% 
+  spread(key=cover, value=count)
+glc4km<-setnames(glc4km, paste0("x",names(glc4km)))
+colnames(glc4km)[1]<-"RouteID"
+glc4km[is.na(glc4km)]<-0
+glc4km<-mutate(.data = glc4km, Sum = rowSums(glc4km[,2:230]))
+#subset out landcover of interest values only:
+lc4km<-glc4km %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV4km<-glc4km %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV4km<-glc4km %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD4km<-glc4km %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>% 
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499,  x545) %>% 
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV4km<-glc4km %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>% 
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317,  x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>% 
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc4km<-left_join(SHV4km, DSD4km, by = "RouteID")
+Broadlc4km<-left_join(Broadlc4km, ADV4km, by = "RouteID")
+Broadlc4km<-left_join(Broadlc4km, ISNV4km, by = "RouteID")
+head(Broadlc4km)
+lc4km<-left_join(lc4km, Broadlc4km, by = "RouteID")
+head(lc4km)
+###get proportions of landcover of interest: -----
+lc4km<-lc4km %>% 
+  mutate(p312_4km = (x312/Sum)*100) %>% 
+  mutate(p316_4km = (x316/Sum)*100) %>% 
+  mutate(p437_4km = (x437/Sum)*100) %>% 
+  mutate(p484_4km = (x484/Sum)*100) %>% 
+  mutate(p485_4km = (x485/Sum)*100) %>% 
+  mutate(p488_4km = (x488/Sum)*100) %>% 
+  mutate(p489_4km = (x489/Sum)*100) %>% 
+  mutate(p490_4km = (x490/Sum)*100) %>% 
+  mutate(p491_4km = (x491/Sum)*100) %>% 
+  mutate(p492_4km = (x492/Sum)*100) %>% 
+  mutate(p493_4km = (x493/Sum)*100) %>% 
+  mutate(p495_4km = (x495/Sum)*100) %>% 
+  mutate(p498_4km = (x498/Sum)*100) %>% 
+  mutate(p556_4km = (x556/Sum)*100) %>% 
+  mutate(p557_4km = (x557/Sum)*100) %>% 
+  mutate(p558_4km = (x558/Sum)*100) %>% 
+  mutate(pSHV_4km = (SHV/Sum)*100) %>% 
+  mutate(pDSD_4km = (DSD/Sum)*100) %>% 
+  mutate(pADV_4km = (ADV/Sum)*100) %>% 
+  mutate(pISNV_4km = (ISNV/Sum)*100) 
+
+
+head(lc4km)
+
+
+##5km buffer ----
+glc5km<-e5kmdf %>% 
+  spread(key=cover, value=count)
+glc5km<-setnames(glc5km, paste0("x",names(glc5km)))
+colnames(glc5km)[1]<-"RouteID"
+glc5km[is.na(glc5km)]<-0
+glc5km<-mutate(.data = glc5km, Sum = rowSums(glc5km[,2:230]))
+#subset out landcover of interest values only:
+lc5km<-glc5km %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV5km<-glc5km %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV5km<-glc5km %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD5km<-glc5km %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>% 
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499,  x545) %>% 
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV5km<-glc5km %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>% 
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317,  x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>% 
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc5km<-left_join(SHV5km, DSD5km, by = "RouteID")
+Broadlc5km<-left_join(Broadlc5km, ADV5km, by = "RouteID")
+Broadlc5km<-left_join(Broadlc5km, ISNV5km, by = "RouteID")
+head(Broadlc5km)
+lc5km<-left_join(lc5km, Broadlc5km, by = "RouteID")
+head(lc5km)
+###get proportions of landcover of interest: -----
+lc5km<-lc5km %>% 
+  mutate(p312_5km = (x312/Sum)*100) %>% 
+  mutate(p316_5km = (x316/Sum)*100) %>% 
+  mutate(p437_5km = (x437/Sum)*100) %>% 
+  mutate(p484_5km = (x484/Sum)*100) %>% 
+  mutate(p485_5km = (x485/Sum)*100) %>% 
+  mutate(p488_5km = (x488/Sum)*100) %>% 
+  mutate(p489_5km = (x489/Sum)*100) %>% 
+  mutate(p490_5km = (x490/Sum)*100) %>% 
+  mutate(p491_5km = (x491/Sum)*100) %>% 
+  mutate(p492_5km = (x492/Sum)*100) %>% 
+  mutate(p493_5km = (x493/Sum)*100) %>% 
+  mutate(p495_5km = (x495/Sum)*100) %>% 
+  mutate(p498_5km = (x498/Sum)*100) %>% 
+  mutate(p556_5km = (x556/Sum)*100) %>% 
+  mutate(p557_5km = (x557/Sum)*100) %>% 
+  mutate(p558_5km = (x558/Sum)*100) %>% 
+  mutate(pSHV_5km = (SHV/Sum)*100) %>% 
+  mutate(pDSD_5km = (DSD/Sum)*100) %>% 
+  mutate(pADV_5km = (ADV/Sum)*100) %>% 
+  mutate(pISNV_5km = (ISNV/Sum)*100) 
+
+
+head(lc5km)
+
+
+##8km buffer ----
+glc8km<-e8kmdf %>% 
+  spread(key=cover, value=count)
+glc8km<-setnames(glc8km, paste0("x",names(glc8km)))
+colnames(glc8km)[1]<-"RouteID"
+glc8km[is.na(glc8km)]<-0
+glc8km<-mutate(.data = glc8km, Sum = rowSums(glc8km[,2:230]))
+#subset out landcover of interest values only:
+lc8km<-glc8km %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV8km<-glc8km %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV8km<-glc8km %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD8km<-glc8km %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>% 
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499,  x545) %>% 
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV8km<-glc8km %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>% 
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317,  x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>% 
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc8km<-left_join(SHV8km, DSD8km, by = "RouteID")
+Broadlc8km<-left_join(Broadlc8km, ADV8km, by = "RouteID")
+Broadlc8km<-left_join(Broadlc8km, ISNV8km, by = "RouteID")
+head(Broadlc8km)
+lc8km<-left_join(lc8km, Broadlc8km, by = "RouteID")
+head(lc8km)
+###get proportions of landcover of interest: -----
+lc8km<-lc8km %>% 
+  mutate(p312_8km = (x312/Sum)*100) %>% 
+  mutate(p316_8km = (x316/Sum)*100) %>% 
+  mutate(p437_8km = (x437/Sum)*100) %>% 
+  mutate(p484_8km = (x484/Sum)*100) %>% 
+  mutate(p485_8km = (x485/Sum)*100) %>% 
+  mutate(p488_8km = (x488/Sum)*100) %>% 
+  mutate(p489_8km = (x489/Sum)*100) %>% 
+  mutate(p490_8km = (x490/Sum)*100) %>% 
+  mutate(p491_8km = (x491/Sum)*100) %>% 
+  mutate(p492_8km = (x492/Sum)*100) %>% 
+  mutate(p493_8km = (x493/Sum)*100) %>% 
+  mutate(p495_8km = (x495/Sum)*100) %>% 
+  mutate(p498_8km = (x498/Sum)*100) %>% 
+  mutate(p556_8km = (x556/Sum)*100) %>% 
+  mutate(p557_8km = (x557/Sum)*100) %>% 
+  mutate(p558_8km = (x558/Sum)*100) %>% 
+  mutate(pSHV_8km = (SHV/Sum)*100) %>% 
+  mutate(pDSD_8km = (DSD/Sum)*100) %>% 
+  mutate(pADV_8km = (ADV/Sum)*100) %>% 
+  mutate(pISNV_8km = (ISNV/Sum)*100) 
+
+
+head(lc8km)
+
+
+##20km buffer ----
+glc20km<-e20kmdf %>% 
+  spread(key=cover, value=count)
+glc20km<-setnames(glc20km, paste0("x",names(glc20km)))
+colnames(glc20km)[1]<-"RouteID"
+glc20km[is.na(glc20km)]<-0
+glc20km<-mutate(.data = glc20km, Sum = rowSums(glc20km[,2:230]))
+#subset out landcover of interest values only:
+lc20km<-glc20km %>% 
+  select(RouteID, x312, x316, x437, x484, x485, x488, x489, x490, x491, x492, x493, x495, x498, x556, x557, x558, Sum)
+###subset out broad landcover values: ----
+##Agriculture and Developed Vegetation:
+ADV20km<-glc20km %>% 
+  select(RouteID, x555, x556, x557) %>% 
+  mutate(ADV = rowSums(.[,2:4])) %>% 
+  select(RouteID, ADV)
+
+##Introduced and Semi-natural Vegetation:
+ISNV20km<-glc20km %>% 
+  # select(RouteID, x558, x559, x560, x561, x562, x563) %>% 
+  select(RouteID, x558, x559, x561, x562, x563) %>% 
+  mutate(ISNV = rowSums(.[,2:6])) %>% 
+  select(RouteID, ISNV)
+
+## Desert and semi-desert
+DSD20km<-glc20km %>% 
+  # select(RouteID, x306, x442, x460, x461, x462, x466, x470, x471, x472, x473, x474, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499, x538, x545) %>% 
+  select(RouteID, x306, x460, x461, x466, x470, x471, x472, x476, x477, x484, x485, x486, x487, x488, x489, x490, x491, x492, x493, x494, x495, x496, x497, x498, x499,  x545) %>% 
+  mutate(DSD = rowSums(.[,2:27])) %>% 
+  select(RouteID, DSD)
+
+##Shurb and herb vegetation:
+SHV20km<-glc20km %>% 
+  # select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x298, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317, x318, x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x381, x382, x383, x384, x385, x396, x397, x398, x422, x424, x425, x426, x427, x429, x430, x432, x433, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x455, x456, x457, x458, x459, x508) %>% 
+  select(RouteID, x117, x266, x269, x274, x275, x282, x296, x297, x299, x301, x302, x303, x304, x305, x307, x308, x309, x310, x311, x312, x313, x314, x315, x316, x317,  x319, x321, x322, x323, x324, x325, x326, x327, x328, x329, x331, x358, x359, x360, x361, x384, x385, x397, x398, x422, x424, x425, x426, x427, x430, x432, x434, x436, x437, x438, x439, x440, x441, x443, x444, x445, x456, x457, x458, x459) %>% 
+  mutate(SHV = rowSums(.[,2:66])) %>% 
+  select(RouteID, SHV)
+
+Broadlc20km<-left_join(SHV20km, DSD20km, by = "RouteID")
+Broadlc20km<-left_join(Broadlc20km, ADV20km, by = "RouteID")
+Broadlc20km<-left_join(Broadlc20km, ISNV20km, by = "RouteID")
+head(Broadlc20km)
+lc20km<-left_join(lc20km, Broadlc20km, by = "RouteID")
+head(lc20km)
+###get proportions of landcover of interest: -----
+lc20km<-lc20km %>% 
+  mutate(p312_20km = (x312/Sum)*100) %>% 
+  mutate(p316_20km = (x316/Sum)*100) %>% 
+  mutate(p437_20km = (x437/Sum)*100) %>% 
+  mutate(p484_20km = (x484/Sum)*100) %>% 
+  mutate(p485_20km = (x485/Sum)*100) %>% 
+  mutate(p488_20km = (x488/Sum)*100) %>% 
+  mutate(p489_20km = (x489/Sum)*100) %>% 
+  mutate(p490_20km = (x490/Sum)*100) %>% 
+  mutate(p491_20km = (x491/Sum)*100) %>% 
+  mutate(p492_20km = (x492/Sum)*100) %>% 
+  mutate(p493_20km = (x493/Sum)*100) %>% 
+  mutate(p495_20km = (x495/Sum)*100) %>% 
+  mutate(p498_20km = (x498/Sum)*100) %>% 
+  mutate(p556_20km = (x556/Sum)*100) %>% 
+  mutate(p557_20km = (x557/Sum)*100) %>% 
+  mutate(p558_20km = (x558/Sum)*100) %>% 
+  mutate(pSHV_20km = (SHV/Sum)*100) %>% 
+  mutate(pDSD_20km = (DSD/Sum)*100) %>% 
+  mutate(pADV_20km = (ADV/Sum)*100) %>% 
+  mutate(pISNV_20km = (ISNV/Sum)*100) 
+
+
+head(lc20km)
 
 
 # VegDRI data read in ---------
@@ -377,11 +803,11 @@ proj4string(june0511)
 June0511<-projectRaster(june0511, crs = CRS_gap)
 proj4string(June0511)
 summary(June0511@data@values)
-#check visually
-plot(BRSP_Breeding)
-plot(June0511, add= TRUE)
-plot(BRSP_Routes, add = TRUE)
-plot(BRSP_Breeding, add = TRUE)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June0511, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
 June0511[is.na(June0511)]<-0
 summary(June0511@data@values)
 dim(June0511)
@@ -550,7 +976,6 @@ July2813[July2813 == 0]<-NA
 
 # VegDRI mean of early, mid, end season rasters =====
 earlyvd<-mosaic(May1709, May1610, May1511, May1312, May1913, fun = mean, na.rm = TRUE)
-
 midvd<-mosaic(June1409, June2010, June0511, June1712, June2313, fun = mean, na.rm = TRUE)
 latevd<-mosaic(July2609, July2510, July2411, July2212, July2813, fun = mean, na.rm = TRUE)
 #VegDRI extract and mean across buffers ----
@@ -586,6 +1011,8 @@ VegEarly<-cbind(VegEarly, evd20km)
 VegEarly<-VegEarly[c(1:7,9)]
 names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km", "evd5km", "evd8km", "evd20km")
 head(VegEarly)
+summary(VegEarly)
+
 ##Mid Season: ----
 mvd400m<-extract(midvd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
 VegMid<-cbind(ROUTES_ID, mvd400m)
@@ -617,6 +1044,8 @@ VegMid<-cbind(VegMid, mvd20km)
 VegMid<-VegMid[c(1:7,9)]
 names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km", "mvd8km", "mvd20km")
 head(VegMid)
+summary(VegMid)
+
 ##Late Season: ----
 lvd400m<-extract(latevd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
 VegLate<-cbind(ROUTES_ID, lvd400m)
@@ -648,6 +1077,7 @@ VegLate<-cbind(VegLate, lvd20km)
 VegLate<-VegLate[c(1:7,9)]
 names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km", "lvd4km", "lvd5km", "lvd8km", "lvd20km")
 head(VegLate)
+summary(VegLate)
 # PRISM data read in---------
 library(prism)
 #set pathway to prism data:
@@ -739,39 +1169,43 @@ winter10<-mosaic(oct09r, nov09r, dec09r, jan10r, feb10r, mar10r, apr10r, fun = s
 winter11<-mosaic(oct10r, nov10r, dec10r, jan11r, feb11r, mar11r, apr11r, fun = sum)
 winter12<-mosaic(oct11r, nov11r, dec11r, jan12r, feb12r, mar12r, apr12r, fun = sum)
 winter13<-mosaic(oct12r, nov12r, dec12r, jan13r, feb13r, mar13r, apr13r, fun = sum)
+#mean across years:
 winter_mean<-mosaic(winter09, winter10, winter11, winter12, winter13, fun = mean)
 Winter_Means<-projectRaster(winter_mean, crs = CRS_gap)
+#total across years:
+winter_tot<-mosaic(winter09, winter10, winter11, winter12, winter13, fun = sum)
+Winter_Total<-projectRaster(winter_tot, crs = CRS_gap)
 
-##PRISM extract raster values and mean across buffer -----
+##PRISM extract raster values and mean across buffer (Winter means) -----
 ewm400m<-extract(Winter_Means, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(ROUTES_ID, ewm400m)
-precipWinter<-precipWinter[c(1,2,4)]
-names(precipWinter)<-c("RTENAME", "RouteID", "wm400m")
+precipWinterM<-cbind(ROUTES_ID, ewm400m)
+precipWinterM<-precipWinterM[c(1,2,4)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "wm400m")
 
 ewm1km<-extract(Winter_Means, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(precipWinter, ewm1km)
-precipWinter<-precipWinter[c(1:3,5)]
-names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km")
+precipWinterM<-cbind(precipWinterM, ewm1km)
+precipWinterM<-precipWinterM[c(1:3,5)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km")
 
 ewm4km<-extract(Winter_Means, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(precipWinter, ewm4km)
-precipWinter<-precipWinter[c(1:4,6)]
-names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km")
+precipWinterM<-cbind(precipWinterM, ewm4km)
+precipWinterM<-precipWinterM[c(1:4,6)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km")
 
 ewm5km<-extract(Winter_Means, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(precipWinter, ewm5km)
-precipWinter<-precipWinter[c(1:5,7)]
-names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km")
+precipWinterM<-cbind(precipWinterM, ewm5km)
+precipWinterM<-precipWinterM[c(1:5,7)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km")
 
 ewm8km<-extract(Winter_Means, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(precipWinter, ewm8km)
-precipWinter<-precipWinter[c(1:6,8)]
-names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km")
+precipWinterM<-cbind(precipWinterM, ewm8km)
+precipWinterM<-precipWinterM[c(1:6,8)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km")
 
 ewm20km<-extract(Winter_Means, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
-precipWinter<-cbind(precipWinter, ewm20km)
-precipWinter<-precipWinter[c(1:7,9)]
-names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km", "pwm20km")
+precipWinterM<-cbind(precipWinterM, ewm20km)
+precipWinterM<-precipWinterM[c(1:7,9)]
+names(precipWinterM)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km", "pwm20km")
 
 
 
@@ -781,6 +1215,45 @@ names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm
 
 
 
+
+
+
+
+
+
+##PRISM extract raster values and mean across buffer (Winter total) -----
+ewt400m<-extract(Winter_Total, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(ROUTES_ID, ewt400m)
+precipWinterT<-precipWinterT[c(1,2,4)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m")
+
+ewt1km<-extract(Winter_Total, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(precipWinterT, ewt1km)
+precipWinterT<-precipWinterT[c(1:3,5)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m", "pwt1km")
+
+ewt4km<-extract(Winter_Total, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(precipWinterT, ewt4km)
+precipWinterT<-precipWinterT[c(1:4,6)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m", "pwt1km", "pwt4km")
+
+ewt5km<-extract(Winter_Total, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(precipWinterT, ewt5km)
+precipWinterT<-precipWinterT[c(1:5,7)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m", "pwt1km", "pwt4km", "pwt5km")
+
+ewt8km<-extract(Winter_Total, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(precipWinterT, ewt8km)
+precipWinterT<-precipWinterT[c(1:6,8)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m", "pwt1km", "pwt4km", "pwt5km", "pwt8km")
+
+ewt20km<-extract(Winter_Total, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinterT<-cbind(precipWinterT, ewt20km)
+precipWinterT<-precipWinterT[c(1:7,9)]
+names(precipWinterT)<-c("RTENAME", "RouteID", "pwt400m", "pwt1km", "pwt4km", "pwt5km", "pwt8km", "pwt20km")
+
+
+#Combine datafiles ----
 
 
 
