@@ -8,7 +8,7 @@ library(rgeos)
 #setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation")
 setwd("~/Dropbox/Baylor/PhD/Dissertation")
 
-#load in gap lc rasters to mosaic together for gaplc west raster
+#load in gap lc rasters to mosaic together for gaplc west raster -----
 # R2<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/unzipped/gap_landcover/Region2_California/gaplf2011lc_v30_lcc_2.tif")
 # R11<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/unzipped/gap_landcover/Region11_NorthPacific/gaplf2011lc_v30_lcc_11.tif")
 # R13<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/unzipped/gap_landcover/Region13_PlainsPrairiePotholes/gaplf2011lc_v30_lcc_13.tif")
@@ -44,7 +44,7 @@ setwd("~/Dropbox/Baylor/PhD/Dissertation")
 # r2r11<-mosaic(R2, R11, fun = mean)
 #brsp_GDB<-"C:/Users/kim_serno1/Documents/GIS_projects/Dissertation/data/BRSP.gdb"
 
-#import shapefiles PC:
+#import shapefiles PC: ----
 BRSP_breeding<-readOGR(dsn="C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/Shapefiles", layer = "BRSP_BreedingUS")
 plot(BRSP_breeding)
 #summary(BRSP_breeding)
@@ -64,7 +64,7 @@ plot(BRSP_routes, add = TRUE)
 
 Gaplc_west<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/gap_landcover/Gaplc_West_raster.tif")
 
-#import shapefiles Mac:
+#import shapefiles Mac: ----
 brsp_GDB<-"~/Dropbox/Baylor/PhD/GIS/BRSP.gdb"
 
 subset(ogrDrivers(), grepl("GDB", name))
@@ -88,14 +88,12 @@ BRSP_mincenter<-readOGR(dsn=brsp_GDB, layer = "BRSP_MinimumBound_center")
 # plot(BRSP_mincenter, add = TRUE)
 # summary(BRSP_mincenter)
 
-Gaplc_west<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/gap_landcover/Gaplc_West_raster.tif")
 
 # Load in Gap Landcover west raster (creation code above)
-# Gaplc_west<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/GIS/unzipped/gap_landcover/Gaplc_West_raster.tif")
 Gaplc_west<-raster("~/Dropbox/Baylor/PhD/GIS/unzipped/gap_landcover/Gaplc_West_raster.tif")
 
 
-# Get projection information for gap landcover raster:
+# Get projection information for gap landcover raster: ----
 CRS_gap<-"+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 CRS_gap
 
@@ -113,15 +111,8 @@ plot(Gaplc_west)
 plot(BRSP_Breeding, add = TRUE)
 plot(BRSP_Routes, add = TRUE)
 
-# Buffers around minimum bounding rectangle center (20km, 40km)
-BRSP_20km<-gBuffer(BRSP_Mincenter, width = 20000, byid = TRUE, id=BRSP_Mincenter@data$RouteID)
-plot(BRSP_20km, add = TRUE)
-summary(BRSP_20km)
-BRSP_40km<-gBuffer(BRSP_Mincenter, width = 40000, byid = TRUE, id=BRSP_Mincenter@data$RouteID)
-plot(BRSP_40km, add = TRUE)
-summary(BRSP_40km)
 
-#buffers around routes
+#buffers around routes ------
 BRSP_1km<-gBuffer(BRSP_Routes, width = 1000, byid = TRUE, id=BRSP_Routes@data$RouteID)
 plot(BRSP_1km, add = TRUE)
 summary(BRSP_1km)
@@ -142,7 +133,13 @@ BRSP_8km<-gBuffer(BRSP_Routes, width = 8000, byid = TRUE, id=BRSP_Routes@data$Ro
 plot(BRSP_8km, add = TRUE)
 summary(BRSP_8km)
 
-#extract gap lc values for buffer:
+# Buffers around minimum bounding rectangle center (20km) 
+BRSP_20km<-gBuffer(BRSP_Mincenter, width = 20000, byid = TRUE, id=BRSP_Mincenter@data$RouteID)
+plot(BRSP_20km, add = TRUE)
+summary(BRSP_20km)
+
+
+#extract gap lc values for buffer: -----
 start.time = Sys.time()
 e400m<-extract(Gaplc_west, BRSP_400m)
 e400mTable<-lapply(e400m, table)
@@ -172,7 +169,7 @@ e8kmTable<-lapply(e8km, table)
 end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
 paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
 
-# convert to data frame
+# convert to data frame -------
 e400mdf <- data.frame(id = rep(BRSP_Routes$RouteID, lapply(e400mTable, length)),
                    cover = names(unlist(e400mTable)),
                    count = unlist(e400mTable)
@@ -214,7 +211,8 @@ head(e8kmdf)
 
 # VegDRI data read in ---------
 #2009
-may1709<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week20_051709.tif")
+# may1709<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week20_051709.tif")
+may1709<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week20_051709.tif")
 # plot(may1709)
 proj4string(may1709)
 May1709<-projectRaster(may1709, crs = CRS_gap)
@@ -236,29 +234,31 @@ summary(May1709@data@values)
 May1709[May1709 == 0]<-NA
 summary(May1709@data@values)
 
-#####NEED TO FIND WEEK 25
-# june2109<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week25_062109.tif")
-## plot(june2109)
-# proj4string(june2109)
-# June2109<-projectRaster(june2109, crs = CRS_gap)
-# proj4string(June2109)
-# summary(June2109@data@values)
-## #check visually
-## plot(BRSP_Breeding)
-## plot(June2109, add= TRUE)
-## plot(BRSP_Routes, add = TRUE)
-## plot(BRSP_Breeding, add = TRUE)
-# June2109[is.na(June2109)]<-0
-# summary(June2109@data@values)
-# dim(June2109)
-# rcl<-c(252,256,0)
-# rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-# June2109<-reclassify(June2109, rcl2)
-## plot(June2109)
-# summary(June2109@data@values)
-# June2109[June2109 == 0]<-NA
+#Week 25 not available so using week 24:
+# june1409<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week24_061409.tif")
+june1409<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week24_061409.tif")
+# plot(june1409)
+proj4string(june1409)
+June1409<-projectRaster(june1409, crs = CRS_gap)
+proj4string(June1409)
+summary(June1409@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June1409, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+June1409[is.na(June1409)]<-0
+summary(June1409@data@values)
+dim(June1409)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+June1409<-reclassify(June1409, rcl2)
+# plot(June1409)
+summary(June1409@data@values)
+June1409[June1409 == 0]<-NA
 
-july2609<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week30_072609.tif")
+# july2609<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week30_072609.tif")
+july2609<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week30_072609.tif")
 # plot(july2609)
 proj4string(july2609)
 July2609<-projectRaster(july2609, crs = CRS_gap)
@@ -280,7 +280,8 @@ summary(July2609@data@values)
 July2609[July2609 == 0]<-NA
 
 #2010
-may1610<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week20_051610.tif")
+# may1610<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week20_051610.tif")
+may1610<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week20_051610.tif")
 # plot(may1610)
 proj4string(may1610)
 May1610<-projectRaster(may1610, crs = CRS_gap)
@@ -301,7 +302,8 @@ May1610<-reclassify(May1610, rcl2)
 summary(May1610@data@values)
 May1610[May1610 == 0]<-NA
 
-june2010<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week25_062010.tif")
+# june2010<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week25_062010.tif")
+june2010<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week25_062010.tif")
 # plot(june2010)
 proj4string(june2010)
 June2010<-projectRaster(june2010, crs = CRS_gap)
@@ -322,7 +324,8 @@ June2010<-reclassify(June2010, rcl2)
 summary(June2010@data@values)
 June2010[June2010 == 0]<-NA
 
-july2510<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week30_072510.tif")
+# july2510<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week30_072510.tif")
+july2510<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week30_072510.tif")
 # plot(july2510)
 proj4string(july2510)
 July2510<-projectRaster(july2510, crs = CRS_gap)
@@ -344,7 +347,8 @@ summary(July2510@data@values)
 July2510[July2510 == 0]<-NA
 
 #2011
-may1511<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week20_051511.tif")
+# may1511<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week20_051511.tif")
+may1511<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2011/vegdri_emodis_week20_051511.tif")
 # plot(may1511)
 proj4string(may1511)
 May1511<-projectRaster(may1511, crs = CRS_gap)
@@ -365,29 +369,31 @@ May1511<-reclassify(May1511, rcl2)
 summary(May1511@data@values)
 May1511[May1511 == 0]<-NA
 
-######NEED TO FIND AND CHECK 
-# june1911<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week25_061911.tif")
-# plot(june1911)
-# proj4string(june1911)
-# June1911<-projectRaster(june1911, crs = CRS_gap)
-# proj4string(June1911)
-# summary(June1911@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June1911, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-# June1911[is.na(June1911)]<-0
-# summary(June1911@data@values)
-# dim(June1911)
-# rcl<-c(252,256,0)
-# rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-# June1911<-reclassify(June1911, rcl2)
-# plot(June1911)
-# summary(June1911@data@values)
-# June1911[June1911 == 0]<-NA
+# Week 25 not available, so using week 23:
+# june0511<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week23_060511.tif")
+june0511<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2011/vegdri_emodis_week23_060511.tif")
+plot(june0511)
+proj4string(june0511)
+June0511<-projectRaster(june0511, crs = CRS_gap)
+proj4string(June0511)
+summary(June0511@data@values)
+#check visually
+plot(BRSP_Breeding)
+plot(June0511, add= TRUE)
+plot(BRSP_Routes, add = TRUE)
+plot(BRSP_Breeding, add = TRUE)
+June0511[is.na(June0511)]<-0
+summary(June0511@data@values)
+dim(June0511)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+June0511<-reclassify(June0511, rcl2)
+plot(June0511)
+summary(June0511@data@values)
+June0511[June0511 == 0]<-NA
 
-july2411<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week30_072411.tif")
+# july2411<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week30_072411.tif")
+july2411<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2011/vegdri_emodis_week30_072411.tif")
 # plot(july2411)
 proj4string(july2411)
 July2411<-projectRaster(july2411, crs = CRS_gap)
@@ -409,7 +415,8 @@ summary(July2411@data@values)
 July2411[July2411 == 0]<-NA
 
 #2012
-may1312<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week20_051312.tif")
+# may1312<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week20_051312.tif")
+may1312<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2012/vegdri_emodis_week20_051312.tif")
 # plot(may1312)
 proj4string(may1312)
 May1312<-projectRaster(may1312, crs = CRS_gap)
@@ -430,7 +437,8 @@ May1312<-reclassify(May1312, rcl2)
 summary(May1312@data@values)
 May1312[May1312 == 0]<-NA
 
-june1712<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week25_061712.tif")
+# june1712<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week25_061712.tif")
+june1712<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2012/vegdri_emodis_week25_061712.tif")
 # plot(june1712)
 proj4string(june1712)
 June1712<-projectRaster(june1712, crs = CRS_gap)
@@ -451,7 +459,8 @@ June1712<-reclassify(June1712, rcl2)
 summary(June1712@data@values)
 June1712[June1712 == 0]<-NA
 
-july2212<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week30_072212.tif")
+# july2212<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week30_072212.tif")
+july2212<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2012/vegdri_emodis_week30_072212.tif")
 # plot(july2212)
 proj4string(july2212)
 July2212<-projectRaster(july2212, crs = CRS_gap)
@@ -473,7 +482,8 @@ summary(July2212@data@values)
 July2212[July2212 == 0]<-NA
 
 #2013
-may1913<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week20_051913.tif")
+# may1913<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week20_051913.tif")
+may1913<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week20_051913.tif")
 # plot(may1913)
 proj4string(may1913)
 May1913<-projectRaster(may1913, crs = CRS_gap)
@@ -494,7 +504,8 @@ May1913<-reclassify(May1913, rcl2)
 summary(May1913@data@values)
 May1913[May1913 == 0]<-NA
 
-june2313<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week25_062313.tif")
+# june2313<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week25_062313.tif")
+june2313<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week25_062313.tif")
 # plot(june2313)
 proj4string(june2313)
 June2313<-projectRaster(june2313, crs = CRS_gap)
@@ -515,7 +526,8 @@ June2313<-reclassify(June2313, rcl2)
 summary(June2313@data@values)
 June2313[June2313 == 0]<-NA
 
-july2813<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week30_072813.tif")
+# july2813<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week30_072813.tif")
+july2813<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week30_072813.tif")
 # plot(july2813)
 proj4string(july2813)
 July2813<-projectRaster(july2813, crs = CRS_gap)
@@ -538,8 +550,8 @@ July2813[July2813 == 0]<-NA
 
 # VegDRI mean of early, mid, end season rasters =====
 earlyvd<-mosaic(May1709, May1610, May1511, May1312, May1913, fun = mean, na.rm = TRUE)
-#NEED to check 
-#midvd<-mosaic(June2109, June2010, June1911, June1712, June2313, fun = mean, na.rm = TRUE)
+
+midvd<-mosaic(June1409, June2010, June0511, June1712, June2313, fun = mean, na.rm = TRUE)
 latevd<-mosaic(July2609, July2510, July2411, July2212, July2813, fun = mean, na.rm = TRUE)
 #VegDRI extract and mean across buffers ----
 ROUTES_ID<-BRSP_Routes@data[c(2, 16)]
@@ -639,7 +651,8 @@ head(VegLate)
 # PRISM data read in---------
 library(prism)
 #set pathway to prism data:
-options(prism.path = "~/Dropbox/Baylor/PhD/GIS/unzipped/PRISM")
+#options(prism.path = "~/Dropbox/Baylor/PhD/GIS/unzipped/PRISM")
+options(prism.path = "C:/Users/kim_serno1/Dropbox/Baylor/PhD/GIS/unzipped/PRISM")
 ## downloaded needed data only do once:
 #get_prism_monthlys(type = "ppt", years = 2008:2013, mon = c(10:12, 1:4))
 
@@ -759,6 +772,15 @@ ewm20km<-extract(Winter_Means, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm20km)
 precipWinter<-precipWinter[c(1:7,9)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km", "pwm20km")
+
+
+
+
+
+
+
+
+
 
 
 
