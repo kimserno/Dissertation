@@ -212,34 +212,431 @@ head(e8kmdf)
 # test<-as.matrix(table(values(Gaplc_west)))
 
 
-# VegDRI
-
-July2813<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week30_072813.tif")
-# plot(July2813)
-proj4string(July2813)
-July28_13<-projectRaster(July2813, crs = CRS_gap)
-proj4string(July28_13)
-summary(July28_13@data@values)
-#check visually
-plot(BRSP_Breeding)
-plot(July28_13, add= TRUE)
-plot(BRSP_Routes, add = TRUE)
-plot(BRSP_Breeding, add = TRUE)
-July28_13[is.na(July28_13[])]<-0
-summary(July28_13@data@values)
-dim(July28_13)
-
-test<-July28_13
+# VegDRI data read in ---------
+#2009
+may1709<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week20_051709.tif")
+# plot(may1709)
+proj4string(may1709)
+May1709<-projectRaster(may1709, crs = CRS_gap)
+proj4string(May1709)
+summary(May1709@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(May1709, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+May1709[is.na(May1709[])]<-0
+summary(May1709@data@values)
+dim(May1709)
 rcl<-c(252,256,0)
 rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-test<-reclassify(test, rcl2)
-plot(test)
-summary(test@data@values)
-test[test == 0]<-NA
+May1709<-reclassify(May1709, rcl2)
+# plot(May1709)
+summary(May1709@data@values)
+May1709[May1709 == 0]<-NA
+summary(May1709@data@values)
 
+#####NEED TO FIND WEEK 25
+# june2109<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week25_062109.tif")
+## plot(june2109)
+# proj4string(june2109)
+# June2109<-projectRaster(june2109, crs = CRS_gap)
+# proj4string(June2109)
+# summary(June2109@data@values)
+## #check visually
+## plot(BRSP_Breeding)
+## plot(June2109, add= TRUE)
+## plot(BRSP_Routes, add = TRUE)
+## plot(BRSP_Breeding, add = TRUE)
+# June2109[is.na(June2109)]<-0
+# summary(June2109@data@values)
+# dim(June2109)
+# rcl<-c(252,256,0)
+# rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+# June2109<-reclassify(June2109, rcl2)
+## plot(June2109)
+# summary(June2109@data@values)
+# June2109[June2109 == 0]<-NA
 
+july2609<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week30_072609.tif")
+# plot(july2609)
+proj4string(july2609)
+July2609<-projectRaster(july2609, crs = CRS_gap)
+proj4string(July2609)
+summary(July2609@data@values)
+# # check visually
+# plot(BRSP_Breeding)
+# plot(July2609, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+# July2609[is.na(July2609)]<-0
+summary(July2609@data@values)
+dim(July2609)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+July2609<-reclassify(July2609, rcl2)
+# plot(July2609)
+summary(July2609@data@values)
+July2609[July2609 == 0]<-NA
 
-# PRISM data
+#2010
+may1610<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week20_051610.tif")
+# plot(may1610)
+proj4string(may1610)
+May1610<-projectRaster(may1610, crs = CRS_gap)
+proj4string(May1610)
+summary(May1610@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(May1610, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+May1610[is.na(May1610[])]<-0
+summary(May1610@data@values)
+dim(May1610)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+May1610<-reclassify(May1610, rcl2)
+# plot(May1610)
+summary(May1610@data@values)
+May1610[May1610 == 0]<-NA
+
+june2010<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week25_062010.tif")
+# plot(june2010)
+proj4string(june2010)
+June2010<-projectRaster(june2010, crs = CRS_gap)
+proj4string(June2010)
+summary(June2010@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June2010, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+June2010[is.na(June2010)]<-0
+summary(June2010@data@values)
+dim(June2010)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+June2010<-reclassify(June2010, rcl2)
+# plot(June2010)
+summary(June2010@data@values)
+June2010[June2010 == 0]<-NA
+
+july2510<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week30_072510.tif")
+# plot(july2510)
+proj4string(july2510)
+July2510<-projectRaster(july2510, crs = CRS_gap)
+proj4string(July2510)
+summary(July2510@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(July2510, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+July2510[is.na(July2510)]<-0
+summary(July2510@data@values)
+dim(July2510)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+July2510<-reclassify(July2510, rcl2)
+# plot(July2510)
+summary(July2510@data@values)
+July2510[July2510 == 0]<-NA
+
+#2011
+may1511<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week20_051511.tif")
+# plot(may1511)
+proj4string(may1511)
+May1511<-projectRaster(may1511, crs = CRS_gap)
+proj4string(May1511)
+summary(May1511@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(May1511, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+May1511[is.na(May1511[])]<-0
+summary(May1511@data@values)
+dim(May1511)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+May1511<-reclassify(May1511, rcl2)
+# plot(May1511)
+summary(May1511@data@values)
+May1511[May1511 == 0]<-NA
+
+######NEED TO FIND AND CHECK 
+# june1911<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week25_061911.tif")
+# plot(june1911)
+# proj4string(june1911)
+# June1911<-projectRaster(june1911, crs = CRS_gap)
+# proj4string(June1911)
+# summary(June1911@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June1911, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+# June1911[is.na(June1911)]<-0
+# summary(June1911@data@values)
+# dim(June1911)
+# rcl<-c(252,256,0)
+# rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+# June1911<-reclassify(June1911, rcl2)
+# plot(June1911)
+# summary(June1911@data@values)
+# June1911[June1911 == 0]<-NA
+
+july2411<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week30_072411.tif")
+# plot(july2411)
+proj4string(july2411)
+July2411<-projectRaster(july2411, crs = CRS_gap)
+proj4string(July2411)
+summary(July2411@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(July2411, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+July2411[is.na(July2411)]<-0
+summary(July2411@data@values)
+dim(July2411)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+July2411<-reclassify(July2411, rcl2)
+# plot(July2411)
+summary(July2411@data@values)
+July2411[July2411 == 0]<-NA
+
+#2012
+may1312<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week20_051312.tif")
+# plot(may1312)
+proj4string(may1312)
+May1312<-projectRaster(may1312, crs = CRS_gap)
+proj4string(May1312)
+summary(May1312@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(May1312, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+May1312[is.na(May1312[])]<-0
+summary(May1312@data@values)
+dim(May1312)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+May1312<-reclassify(May1312, rcl2)
+# plot(May1312)
+summary(May1312@data@values)
+May1312[May1312 == 0]<-NA
+
+june1712<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week25_061712.tif")
+# plot(june1712)
+proj4string(june1712)
+June1712<-projectRaster(june1712, crs = CRS_gap)
+proj4string(June1712)
+summary(June1712@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June1712, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+June1712[is.na(June1712)]<-0
+summary(June1712@data@values)
+dim(June1712)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+June1712<-reclassify(June1712, rcl2)
+# plot(June1712)
+summary(June1712@data@values)
+June1712[June1712 == 0]<-NA
+
+july2212<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week30_072212.tif")
+# plot(july2212)
+proj4string(july2212)
+July2212<-projectRaster(july2212, crs = CRS_gap)
+proj4string(July2212)
+summary(July2212@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(July2212, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+July2212[is.na(July2212)]<-0
+summary(July2212@data@values)
+dim(July2212)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+July2212<-reclassify(July2212, rcl2)
+# plot(July2212)
+summary(July2212@data@values)
+July2212[July2212 == 0]<-NA
+
+#2013
+may1913<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week20_051913.tif")
+# plot(may1913)
+proj4string(may1913)
+May1913<-projectRaster(may1913, crs = CRS_gap)
+proj4string(May1913)
+summary(May1913@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(May1913, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+May1913[is.na(May1913[])]<-0
+summary(May1913@data@values)
+dim(May1913)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+May1913<-reclassify(May1913, rcl2)
+# plot(May1913)
+summary(May1913@data@values)
+May1913[May1913 == 0]<-NA
+
+june2313<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week25_062313.tif")
+# plot(june2313)
+proj4string(june2313)
+June2313<-projectRaster(june2313, crs = CRS_gap)
+proj4string(June2313)
+summary(June2313@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(June2313, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+June2313[is.na(June2313)]<-0
+summary(June2313@data@values)
+dim(June2313)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+June2313<-reclassify(June2313, rcl2)
+# plot(June2313)
+summary(June2313@data@values)
+June2313[June2313 == 0]<-NA
+
+july2813<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week30_072813.tif")
+# plot(july2813)
+proj4string(july2813)
+July2813<-projectRaster(july2813, crs = CRS_gap)
+proj4string(July2813)
+summary(July2813@data@values)
+# #check visually
+# plot(BRSP_Breeding)
+# plot(July2813, add= TRUE)
+# plot(BRSP_Routes, add = TRUE)
+# plot(BRSP_Breeding, add = TRUE)
+July2813[is.na(July2813)]<-0
+summary(July2813@data@values)
+dim(July2813)
+rcl<-c(252,256,0)
+rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
+July2813<-reclassify(July2813, rcl2)
+# plot(July2813)
+summary(July2813@data@values)
+July2813[July2813 == 0]<-NA
+
+# VegDRI mean of early, mid, end season rasters =====
+earlyvd<-mosaic(May1709, May1610, May1511, May1312, May1913, fun = mean, na.rm = TRUE)
+#NEED to check 
+#midvd<-mosaic(June2109, June2010, June1911, June1712, June2313, fun = mean, na.rm = TRUE)
+latevd<-mosaic(July2609, July2510, July2411, July2212, July2813, fun = mean, na.rm = TRUE)
+#VegDRI extract and mean across buffers ----
+ROUTES_ID<-BRSP_Routes@data[c(2, 16)]
+##Early Season: ----
+evd400m<-extract(earlyvd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(ROUTES_ID, evd400m)
+VegEarly<-VegEarly[c(1,2,4)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m")
+
+evd1km<-extract(earlyvd, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(VegEarly, evd1km)
+VegEarly<-VegEarly[c(1:3,5)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km")
+
+evd4km<-extract(earlyvd, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(VegEarly, evd4km)
+VegEarly<-VegEarly[c(1:4,6)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km")
+
+evd5km<-extract(earlyvd, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(VegEarly, evd5km)
+VegEarly<-VegEarly[c(1:5,7)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km", "evd5km")
+
+evd8km<-extract(earlyvd, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(VegEarly, evd8km)
+VegEarly<-VegEarly[c(1:6,8)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km", "evd5km", "evd8km")
+
+evd20km<-extract(earlyvd, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
+VegEarly<-cbind(VegEarly, evd20km)
+VegEarly<-VegEarly[c(1:7,9)]
+names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km", "evd5km", "evd8km", "evd20km")
+head(VegEarly)
+##Mid Season: ----
+mvd400m<-extract(midvd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(ROUTES_ID, mvd400m)
+VegMid<-VegMid[c(1,2,4)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m")
+
+mvd1km<-extract(midvd, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(VegMid, mvd1km)
+VegMid<-VegMid[c(1:3,5)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km")
+
+mvd4km<-extract(midvd, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(VegMid, mvd4km)
+VegMid<-VegMid[c(1:4,6)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km")
+
+mvd5km<-extract(midvd, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(VegMid, mvd5km)
+VegMid<-VegMid[c(1:5,7)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km")
+
+mvd8km<-extract(midvd, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(VegMid, mvd8km)
+VegMid<-VegMid[c(1:6,8)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km", "mvd8km")
+
+mvd20km<-extract(midvd, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
+VegMid<-cbind(VegMid, mvd20km)
+VegMid<-VegMid[c(1:7,9)]
+names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km", "mvd8km", "mvd20km")
+head(VegMid)
+##Late Season: ----
+lvd400m<-extract(latevd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(ROUTES_ID, lvd400m)
+VegLate<-VegLate[c(1,2,4)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m")
+
+lvd1km<-extract(latevd, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(VegLate, lvd1km)
+VegLate<-VegLate[c(1:3,5)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km")
+
+lvd4km<-extract(latevd, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(VegLate, lvd4km)
+VegLate<-VegLate[c(1:4,6)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km", "lvd4km")
+
+lvd5km<-extract(latevd, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(VegLate, lvd5km)
+VegLate<-VegLate[c(1:5,7)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km", "lvd4km", "lvd5km")
+
+lvd8km<-extract(latevd, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(VegLate, lvd8km)
+VegLate<-VegLate[c(1:6,8)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km", "lvd4km", "lvd5km", "lvd8km")
+
+lvd20km<-extract(latevd, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
+VegLate<-cbind(VegLate, lvd20km)
+VegLate<-VegLate[c(1:7,9)]
+names(VegLate)<-c("RTENAME", "RouteID", "lvd400m", "lvd1km", "lvd4km", "lvd5km", "lvd8km", "lvd20km")
+head(VegLate)
+# PRISM data read in---------
 library(prism)
 #set pathway to prism data:
 options(prism.path = "~/Dropbox/Baylor/PhD/GIS/unzipped/PRISM")
@@ -323,7 +720,7 @@ apr11r<-raster(apr11)
 apr12r<-raster(apr12)
 apr13r<-raster(apr13)
 
-#add rasters for winter precip totals (oct-apr; in millimeters):
+## PRISM add rasters for winter precip totals (oct-apr; in millimeters): ----
 winter09<-mosaic(oct08r, nov08r, dec08r, jan09r, feb09r, mar09r, apr09r, fun = sum)
 winter10<-mosaic(oct09r, nov09r, dec09r, jan10r, feb10r, mar10r, apr10r, fun = sum)
 winter11<-mosaic(oct10r, nov10r, dec10r, jan11r, feb11r, mar11r, apr11r, fun = sum)
@@ -332,59 +729,33 @@ winter13<-mosaic(oct12r, nov12r, dec12r, jan13r, feb13r, mar13r, apr13r, fun = s
 winter_mean<-mosaic(winter09, winter10, winter11, winter12, winter13, fun = mean)
 Winter_Means<-projectRaster(winter_mean, crs = CRS_gap)
 
-precipWinter<-BRSP_Routes@data[c(2, 16)]
-#extract raster values and mean across buffer
-start.time = Sys.time()
-ewm400m<-extract(Winter_Means, BRSP_400m, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
-
-
-precipWinter<-cbind(precipWinter, ewm400m)
+##PRISM extract raster values and mean across buffer -----
+ewm400m<-extract(Winter_Means, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
+precipWinter<-cbind(ROUTES_ID, ewm400m)
 precipWinter<-precipWinter[c(1,2,4)]
 names(precipWinter)<-c("RTENAME", "RouteID", "wm400m")
 
-start.time = Sys.time()
-ewm1km<-extract(Winter_Means, BRSP_1km, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
-
+ewm1km<-extract(Winter_Means, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm1km)
 precipWinter<-precipWinter[c(1:3,5)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km")
 
-
-start.time = Sys.time()
-ewm4km<-extract(Winter_Means, BRSP_4km, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
-
+ewm4km<-extract(Winter_Means, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm4km)
 precipWinter<-precipWinter[c(1:4,6)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km")
 
-
-start.time = Sys.time()
-ewm5km<-extract(Winter_Means, BRSP_5km, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+ewm5km<-extract(Winter_Means, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm5km)
 precipWinter<-precipWinter[c(1:5,7)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km")
 
-start.time = Sys.time()
-ewm8km<-extract(Winter_Means, BRSP_8km, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
+ewm8km<-extract(Winter_Means, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm8km)
 precipWinter<-precipWinter[c(1:6,8)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km")
 
-start.time = Sys.time()
-ewm20km<-extract(Winter_Means, BRSP_20km, fun = mean, df = TRUE)
-end.time = Sys.time(); elapsed.time = round(difftime(end.time,start.time, units='mins'), dig = 2)
-paste('Elapsed time was ', elapsed.time, 'minutes or ', round(elapsed.time/60,3), 'hours', sep = '')
-
+ewm20km<-extract(Winter_Means, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
 precipWinter<-cbind(precipWinter, ewm20km)
 precipWinter<-precipWinter[c(1:7,9)]
 names(precipWinter)<-c("RTENAME", "RouteID", "pwm400m", "pwm1km", "pwm4km", "pwm5km", "pwm8km", "pwm20km")
