@@ -10,7 +10,7 @@ library(data.table)
 library(tidyverse)
 #setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation")
 # setwd("~/Dropbox/Baylor/PhD/Dissertation")
-
+load("~/Dropbox/Baylor/PhD/GIS/BRSP_shapefile_rasters3.RData")
 #load in gap lc rasters to mosaic together for gaplc west raster -----
 # R2<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/unzipped/gap_landcover/Region2_California/gaplf2011lc_v30_lcc_2.tif")
 # R11<-raster("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/GIS/unzipped/gap_landcover/Region11_NorthPacific/gaplf2011lc_v30_lcc_11.tif")
@@ -823,7 +823,7 @@ dim(June0511)
 rcl<-c(252,256,0)
 rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
 June0511<-reclassify(June0511, rcl2)
-plot(June0511)
+# plot(June0511)
 summary(June0511@data@values)
 June0511[June0511 == 0]<-NA
 
@@ -1270,7 +1270,7 @@ Landcover<-left_join(Landcover, plc5km, by = "RouteID")
 Landcover<-left_join(Landcover, plc8km, by = "RouteID")
 Landcover<-left_join(Landcover, plc20km, by = "RouteID")
 head(Landcover)
-write.csv(Landcover, file="Landcover.csv")
+write.csv(Landcover, file="Landcover_all.csv")
 
 Precipitation<-left_join(precipWinterT, precipWinterM, by = c("RouteID", "RTENAME"))
 
@@ -1278,7 +1278,7 @@ VegStress<-left_join(VegEarly, VegMid, by = c("RouteID", "RTENAME"))
 VegStress<-left_join(VegStress, VegLate, by = c("RouteID", "RTENAME"))
 
 Drought<-left_join(VegStress, Precipitation, by = c("RouteID", "RTENAME"))
-write.csv(Drought, file = "Drought.csv")
+write.csv(Drought, file = "Drought_all.csv")
 
 
 
