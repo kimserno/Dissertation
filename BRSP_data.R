@@ -126,5 +126,5 @@ BRSPab<-BRSPab %>%
 BRSPab$CoV[is.nan(BRSPab$CoV)]<-0
 head(BRSPab)
 
-
+write.csv(BRSPab, file = "BRSP_Data0913.csv")
 
