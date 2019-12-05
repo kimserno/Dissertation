@@ -669,29 +669,6 @@ summary(May1709@data@values)
 May1709[May1709 == 0]<-NA
 summary(May1709@data@values)
 
-#Week 25 not available so using week 24:
-june1409<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week24_061409.tif")
-# june1409<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week24_061409.tif")
-# plot(june1409)
-proj4string(june1409)
-June1409<-projectRaster(june1409, crs = CRS_gap)
-proj4string(June1409)
-summary(June1409@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June1409, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-June1409[is.na(June1409)]<-0
-summary(June1409@data@values)
-dim(June1409)
-rcl<-c(252,256,0)
-rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-June1409<-reclassify(June1409, rcl2)
-# plot(June1409)
-summary(June1409@data@values)
-June1409[June1409 == 0]<-NA
-
 july2609<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week30_072609.tif")
 # july2609<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week30_072609.tif")
 # plot(july2609)
@@ -736,28 +713,6 @@ May1610<-reclassify(May1610, rcl2)
 # plot(May1610)
 summary(May1610@data@values)
 May1610[May1610 == 0]<-NA
-
-june2010<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week25_062010.tif")
-# june2010<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week25_062010.tif")
-# plot(june2010)
-proj4string(june2010)
-June2010<-projectRaster(june2010, crs = CRS_gap)
-proj4string(June2010)
-summary(June2010@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June2010, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-June2010[is.na(June2010)]<-0
-summary(June2010@data@values)
-dim(June2010)
-rcl<-c(252,256,0)
-rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-June2010<-reclassify(June2010, rcl2)
-# plot(June2010)
-summary(June2010@data@values)
-June2010[June2010 == 0]<-NA
 
 july2510<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week30_072510.tif")
 # july2510<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week30_072510.tif")
@@ -804,29 +759,6 @@ May1511<-reclassify(May1511, rcl2)
 summary(May1511@data@values)
 May1511[May1511 == 0]<-NA
 
-# Week 25 not available, so using week 23:
-june0511<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week23_060511.tif")
-# june0511<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2011/vegdri_emodis_week23_060511.tif")
-plot(june0511)
-proj4string(june0511)
-June0511<-projectRaster(june0511, crs = CRS_gap)
-proj4string(June0511)
-summary(June0511@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June0511, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-June0511[is.na(June0511)]<-0
-summary(June0511@data@values)
-dim(June0511)
-rcl<-c(252,256,0)
-rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-June0511<-reclassify(June0511, rcl2)
-# plot(June0511)
-summary(June0511@data@values)
-June0511[June0511 == 0]<-NA
-
 july2411<-raster("/Volumes/Samsung_USB/VegDRI/2011/vegdri_emodis_week30_072411.tif")
 # july2411<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2011/vegdri_emodis_week30_072411.tif")
 # plot(july2411)
@@ -871,28 +803,6 @@ May1312<-reclassify(May1312, rcl2)
 # plot(May1312)
 summary(May1312@data@values)
 May1312[May1312 == 0]<-NA
-
-june1712<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week25_061712.tif")
-# june1712<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2012/vegdri_emodis_week25_061712.tif")
-# plot(june1712)
-proj4string(june1712)
-June1712<-projectRaster(june1712, crs = CRS_gap)
-proj4string(June1712)
-summary(June1712@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June1712, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-June1712[is.na(June1712)]<-0
-summary(June1712@data@values)
-dim(June1712)
-rcl<-c(252,256,0)
-rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-June1712<-reclassify(June1712, rcl2)
-# plot(June1712)
-summary(June1712@data@values)
-June1712[June1712 == 0]<-NA
 
 july2212<-raster("/Volumes/Samsung_USB/VegDRI/2012/vegdri_emodis_week30_072212.tif")
 # july2212<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2012/vegdri_emodis_week30_072212.tif")
@@ -939,28 +849,6 @@ May1913<-reclassify(May1913, rcl2)
 summary(May1913@data@values)
 May1913[May1913 == 0]<-NA
 
-june2313<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week25_062313.tif")
-# june2313<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week25_062313.tif")
-# plot(june2313)
-proj4string(june2313)
-June2313<-projectRaster(june2313, crs = CRS_gap)
-proj4string(June2313)
-summary(June2313@data@values)
-# #check visually
-# plot(BRSP_Breeding)
-# plot(June2313, add= TRUE)
-# plot(BRSP_Routes, add = TRUE)
-# plot(BRSP_Breeding, add = TRUE)
-June2313[is.na(June2313)]<-0
-summary(June2313@data@values)
-dim(June2313)
-rcl<-c(252,256,0)
-rcl2<-matrix(rcl, ncol=3, byrow=TRUE)
-June2313<-reclassify(June2313, rcl2)
-# plot(June2313)
-summary(June2313@data@values)
-June2313[June2313 == 0]<-NA
-
 july2813<-raster("/Volumes/Samsung_USB/VegDRI/2013/vegdri_emodis_week30_072813.tif")
 # july2813<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2013/vegdri_emodis_week30_072813.tif")
 # plot(july2813)
@@ -983,9 +871,8 @@ July2813<-reclassify(July2813, rcl2)
 summary(July2813@data@values)
 July2813[July2813 == 0]<-NA
 
-# VegDRI mean of early, mid, end season rasters =====
+# VegDRI mean of early and end season rasters =====
 earlyvd<-mosaic(May1709, May1610, May1511, May1312, May1913, fun = mean, na.rm = TRUE)
-midvd<-mosaic(June1409, June2010, June0511, June1712, June2313, fun = mean, na.rm = TRUE)
 latevd<-mosaic(July2609, July2510, July2411, July2212, July2813, fun = mean, na.rm = TRUE)
 #VegDRI extract and mean across buffers ----
 ROUTES_ID<-BRSP_Routes@data[c(2, 16)]
@@ -1021,39 +908,6 @@ VegEarly<-VegEarly[c(1:7,9)]
 names(VegEarly)<-c("RTENAME", "RouteID", "evd400m", "evd1km", "evd4km", "evd5km", "evd8km", "evd20km")
 head(VegEarly)
 summary(VegEarly)
-
-##Mid Season: ----
-mvd400m<-raster::extract(midvd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(ROUTES_ID, mvd400m)
-VegMid<-VegMid[c(1,2,4)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m")
-
-mvd1km<-raster::extract(midvd, BRSP_1km, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(VegMid, mvd1km)
-VegMid<-VegMid[c(1:3,5)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km")
-
-mvd4km<-raster::extract(midvd, BRSP_4km, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(VegMid, mvd4km)
-VegMid<-VegMid[c(1:4,6)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km")
-
-mvd5km<-raster::extract(midvd, BRSP_5km, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(VegMid, mvd5km)
-VegMid<-VegMid[c(1:5,7)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km")
-
-mvd8km<-raster::extract(midvd, BRSP_8km, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(VegMid, mvd8km)
-VegMid<-VegMid[c(1:6,8)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km", "mvd8km")
-
-mvd20km<-raster::extract(midvd, BRSP_20km, fun = mean, df = TRUE, na.rm = TRUE)
-VegMid<-cbind(VegMid, mvd20km)
-VegMid<-VegMid[c(1:7,9)]
-names(VegMid)<-c("RTENAME", "RouteID", "mvd400m", "mvd1km", "mvd4km", "mvd5km", "mvd8km", "mvd20km")
-head(VegMid)
-summary(VegMid)
 
 ##Late Season: ----
 lvd400m<-raster::extract(latevd, BRSP_400m, fun = mean, df = TRUE, na.rm = TRUE)
@@ -1274,8 +1128,7 @@ write.csv(Landcover, file="Landcover_all.csv")
 
 Precipitation<-left_join(precipWinterT, precipWinterM, by = c("RouteID", "RTENAME"))
 
-VegStress<-left_join(VegEarly, VegMid, by = c("RouteID", "RTENAME"))
-VegStress<-left_join(VegStress, VegLate, by = c("RouteID", "RTENAME"))
+VegStress<-left_join(VegEarly, VegLate, by = c("RouteID", "RTENAME"))
 
 Drought<-left_join(VegStress, Precipitation, by = c("RouteID", "RTENAME"))
 write.csv(Drought, file = "Drought_all.csv")
