@@ -2,7 +2,9 @@
 
 library(tidyverse)
 library(matrixStats)
-
+library(plyr)
+library(dplyr)
+library(lubridate)
 # setwd("C:/Users/kim_serno1/Dropbox/Baylor/PhD/Dissertation/BBS_manipulation")
 
 
@@ -128,5 +130,109 @@ BRSPab$pres <-0
 BRSPab$pres<- ifelse(BRSPab$Totalab > 0,1,0)
 head(BRSPab)
 
+
 write.csv(BRSPab, file = "BRSP_Data0913.csv")
 
+#begin creation of covariates file:
+BRSP_cov<-BRSPab[,1:2]#get routes of study
+head(BRSP_cov)
+
+noiseraw<-read.csv("C:/Users/kim_serno1/Documents/PhD/Dissertation/BBS_manipulation/data_files/Unzipped/VehicleData.csv", stringsAsFactors = FALSE)
+head(noiseraw)
+noiseraw$RouteID<-((noiseraw$StateNum*1000)+noiseraw$Route)
+head(noiseraw)
+noiseraw<-subset(noiseraw, RPID == 101)
+noiseraw[,58:107]<-as.numeric(unlist(noiseraw[,58:107]))
+head(noiseraw)
+noiseraw<-noiseraw %>% 
+  mutate(Propnoise = rowMeans(.[,58:107]))
+head(noiseraw)
+noise09<- noiseraw%>% 
+  subset(Year == 2009, select = c( RouteID, Propnoise)) %>% 
+  dplyr::rename(Propnoise09 = Propnoise)
+head(noise09)
+noise10<-noiseraw%>% 
+  subset(Year == 2010, select = c(RouteID, Propnoise)) %>% 
+  dplyr::rename(Propnoise10 = Propnoise)
+noise11<-noiseraw%>% 
+  subset(Year == 2011, select = c(RouteID, Propnoise)) %>% 
+  dplyr::rename(Propnoise11 = Propnoise)
+noise12<-noiseraw%>% 
+  subset(Year == 2012, select = c(RouteID, Propnoise)) %>% 
+  dplyr::rename(Propnoise12 = Propnoise)
+noise13<-noiseraw%>% 
+  subset(Year == 2013, select = c(RouteID, Propnoise)) %>% 
+  dplyr::rename(Propnoise13 = Propnoise)
+
+noise<-left_join(BRSP_cov, noise09, by = "RouteID")[,c(1,3)]
+noise<-left_join(noise, noise10, by = "RouteID")
+noise<-left_join(noise, noise11, by = "RouteID")
+noise<-left_join(noise, noise12, by = "RouteID")
+noise<-left_join(noise, noise13, by = "RouteID")
+
+
+
+weatherraw<-read.csv('C:/Users/kim_serno1/Documents/PhD/Dissertation/BBS_manipulation/data_files/Unzipped/weather.csv')
+weatherraw$RouteID<-((weatherraw$StateNum*1000)+weatherraw$Route)
+head(weatherraw)
+weatherraw<-subset(weatherraw, RPID == 101, select = c(RouteID, Year, Month, Day, ObsN, EndTemp, QualityCurrentID, RunType))
+head(weatherraw)
+weatherraw$date<-as.Date(paste(weatherraw$Year,weatherraw$Month,weatherraw$Day, sep="-"))
+weatherraw$yday<-yday(weatherraw$date)
+head(weatherraw)
+weather09<-weatherraw %>% 
+  subset(Year == 2009, select = c(-Year, -Month, -Day)) %>% 
+  dplyr::rename(
+    ObsN09 = ObsN,
+    EndTemp09 = EndTemp,
+    QualityCurrentID09 = QualityCurrentID,
+    RunType09 = RunType,
+    yday09 = yday,
+    day09 = date
+  )
+weather10<-weatherraw %>% 
+  subset(Year == 2010, select = c(-Year, -Month, -Day)) %>% 
+  dplyr::rename(
+    ObsN10 = ObsN,
+    EndTemp10 = EndTemp,
+    QualityCurrentID10 = QualityCurrentID,
+    RunType10 = RunType,
+    yday10 = yday,
+    day10 = date
+  )
+weather11<-weatherraw %>% 
+  subset(Year == 2011, select = c(-Year, -Month, -Day)) %>% 
+  dplyr::rename(
+    ObsN11 = ObsN,
+    EndTemp11 = EndTemp,
+    QualityCurrentID11 = QualityCurrentID,
+    RunType11 = RunType,
+    yday11 = yday,
+    day11 = date
+  )
+weather12<-weatherraw %>% 
+  subset(Year == 2012, select = c(-Year, -Month, -Day)) %>% 
+  dplyr::rename(
+    ObsN12 = ObsN,
+    EndTemp12 = EndTemp,
+    QualityCurrentID12 = QualityCurrentID,
+    RunType12 = RunType,
+    yday12 = yday,
+    day12 = date
+  )
+weather13<-weatherraw %>% 
+  subset(Year == 2013, select = c(-Year, -Month, -Day)) %>% 
+  dplyr::rename(
+    ObsN13 = ObsN,
+    EndTemp13 = EndTemp,
+    QualityCurrentID13 = QualityCurrentID,
+    RunType13 = RunType,
+    yday13 = yday,
+    day13 = date
+  )
+
+weather<-left_join(BRSP_cov, weather09, by = "RouteID")
+weather<-left_join(weather, weather10, by = "RouteID")
+weather<-left_join(weather, weather11, by = "RouteID")
+weather<-left_join(weather, weather12, by = "RouteID")
+weather<-left_join(weather, weather13, by = "RouteID")
