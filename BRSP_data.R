@@ -124,6 +124,8 @@ BRSPab<-BRSPab %>%
   mutate(Stdev = apply(.[,4:8], 1, sd)) %>% 
   mutate(CoV = Stdev/Aveab)
 BRSPab$CoV[is.nan(BRSPab$CoV)]<-0
+BRSPab$pres <-0
+BRSPab$pres<- ifelse(BRSPab$Totalab > 0,1,0)
 head(BRSPab)
 
 write.csv(BRSPab, file = "BRSP_Data0913.csv")
