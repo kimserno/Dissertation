@@ -16,7 +16,8 @@ BBSroutes$RouteID<-((BBSroutes$StateNum*1000)+BBSroutes$Route)
 head(BBSroutes)
 write.csv(BBSroutes, file = "BBS_manipulation/data_files/Unzipped/BBS_routes.csv")
 
-BRSP_BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/BRSP_BBSroutes2.csv")
+BRSP_BBSroutes<-read.csv("BRSP_routesGIS.csv")
+# BRSP_BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/BRSP_BBSroutes2.csv")
 head(BRSP_BBSroutes)
 
 BRSProutes<-left_join(x=BRSP_BBSroutes, y=BRSP_BBSroutes, by ="RouteID")
@@ -45,9 +46,10 @@ Wyoming<-read.csv("BBS_manipulation/data_files/Unzipped/BBS_states/Wyoming.csv")
 SGstates<-rbind(Arizona, California, Colorado, Idaho, Kansas, Montana, NDakota, Nebraska, Nevada, NMexico, Oregon, SDakota, Utah, Washington, Wyoming)
 SGstates$RouteID<-((SGstates$StateNum*1000)+SGstates$Route)
 head(SGstates)
-length(unique(SGstates$RouteID))
+BRSP_rangeRoutes<-left_join(BRSProutes, SGstates, by = "RouteID")
+length(unique(BRSP_rangeRoutes$RouteID))
 
-SBstates<-subset(SGstates, RPID == 101)
+SBstates<-subset(BRSP_rangeRoutes, RPID == 101)
 length(unique(SBstates$RouteID))
 
 ##subset to years of interest 2009-2013:
@@ -66,7 +68,7 @@ length(unique(routes2013$RouteID))
 
 
 
-df<-data.frame(matrix(ncol = 1, nrow = 1555))
+df<-data.frame(matrix(ncol = 1, nrow = length(unique(SBstates$RouteID))))
 
 df$allroutes<-unique(SBstates$RouteID)
 df$r2009<-0
@@ -169,13 +171,16 @@ noise<-left_join(noise, noise10, by = "RouteID")
 noise<-left_join(noise, noise11, by = "RouteID")
 noise<-left_join(noise, noise12, by = "RouteID")
 noise<-left_join(noise, noise13, by = "RouteID")
+noise<-noise %>% 
+  mutate(mean_noise = rowMeans(.[,2:6])) %>% 
+  dplyr::select(RouteID, mean_noise)
 
 
 
 weatherraw<-read.csv('BBS_manipulation/data_files/Unzipped/weather.csv', stringsAsFactors = FALSE) %>% 
   mutate(RouteID = (StateNum * 1000) + Route) %>% 
   filter(RPID == 101) %>% 
-  select(RouteID, Year, Month, Day, ObsN, EndTemp, QualityCurrentID) %>%
+  dplyr::select(RouteID, Year, Month, Day, ObsN, EndTemp, QualityCurrentID) %>%
   mutate(date = as.Date(paste(Year, Month, Day, sep="-"))) %>% 
   mutate(yday = yday(date))
 head(weatherraw)
@@ -248,25 +253,262 @@ weather<-BRSP_cov %>%
   left_join(weather11, by = "RouteID")
 weather[,2:32]<-as.numeric(unlist(weather[,2:32])) #change values to numeric
 obs<-weather %>% 
-  select(RouteID, starts_with("ObsN")) %>% 
+  dplyr::select(RouteID, starts_with("ObsN")) %>% 
   mutate(countobs = apply(.[,2:6], 1, function(x)length(unique(x)))) %>% 
-  select(RouteID, countobs)
+  dplyr::select(RouteID, countobs)
 temp<-weather %>% 
-  select(RouteID, starts_with("EndTemp")) %>% 
+  dplyr::select(RouteID, starts_with("EndTemp")) %>% 
   mutate(mean_temp = rowMeans(.[,2:6])) %>% 
-  select(RouteID, mean_temp)
+  dplyr::select(RouteID, mean_temp)
 quality<-weather %>% 
-  select(RouteID, starts_with("Quality")) %>% 
+  dplyr::select(RouteID, starts_with("Quality")) %>% 
   mutate(prop_quality = rowMeans(.[,2:6])) %>% 
-  select(RouteID, prop_quality)
+  dplyr::select(RouteID, prop_quality)
 sday<-weather %>% 
-  select(RouteID, starts_with("sday")) %>% 
+  dplyr::select(RouteID, starts_with("sday")) %>% 
   mutate(msday = rowMeans(.[,2:6])) %>% 
-  select(RouteID, msday)
+  dplyr::select(RouteID, msday)
 SurveyCov<-obs %>% 
   left_join(temp, by = "RouteID") %>% 
   left_join(quality, by = "RouteID") %>% 
-  left_join(sday, by = "RouteID") 
+  left_join(sday, by = "RouteID") %>% 
+  left_join(noise, by = "RouteID")
+
 
 write.csv(SurveyCov, file = "SurveyCov.csv") 
-  
+
+#Read in spatial data for spatial optimization:
+Landcover<-read.csv("Landcover_all.csv")  
+Drought<-read.csv("Drought_all.csv") 
+
+BRSPdata_all<-BRSPab %>% 
+  left_join(Landcover, by = "RouteID") %>% 
+  left_join(Drought, by = "RouteID") %>% 
+  left_join(SurveyCov, by = "RouteID") 
+
+#spatial optimization:
+##landcover: ----
+#create individual dataframes for each variable
+p312<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p312"))
+p316<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p316"))
+p437<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p437"))
+p484<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p484"))
+p485<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p485"))
+p488<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p488"))
+p489<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p489"))
+p490<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p490"))
+p491<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p491"))
+p492<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p492"))
+p493<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p493"))
+p495<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p495"))
+p498<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p498"))
+p556<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p556"))
+p558<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p558"))
+p557<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("p557"))
+pSHV<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pSHV"))
+pDSD<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pDSD"))
+pADV<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pADV"))
+pISNV<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pISNV"))
+
+###correlation matrices for each variable: ------
+r2p312<-as.data.frame(cor(p312, method = "spearman")^2)
+r2p312<-r2p312[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p312,1,which.max)
+n312<-names(r2p312)[z]
+n312<-append(n312, "n312", after = 0)
+
+r2p316<-as.data.frame(cor(p316, method = "spearman")^2)
+r2p316<-r2p316[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p316,1,which.max)
+n316<-names(r2p316)[z]
+n316<-append(n316, "n316", after = 0)
+
+r2p437<-as.data.frame(cor(p437, method = "spearman")^2)
+r2p437<-r2p437[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p437,1,which.max)
+n437<-names(r2p437)[z]
+n437<-append(n437, "n437", after = 0)
+
+r2p484<-as.data.frame(cor(p484, method = "spearman")^2)
+r2p484<-r2p484[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p484,1,which.max)
+n484<-names(r2p484)[z]
+n484<-append(n484, "n484", after = 0)
+
+r2p485<-as.data.frame(cor(p485, method = "spearman")^2)
+r2p485<-r2p485[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p485,1,which.max)
+n485<-names(r2p485)[z]
+n485<-append(n485, "n485", after = 0)
+
+r2p488<-as.data.frame(cor(p488, method = "spearman")^2)
+r2p488<-r2p488[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p488,1,which.max)
+n488<-names(r2p488)[z]
+n488<-append(n488, "n488", after = 0)
+
+r2p489<-as.data.frame(cor(p489, method = "spearman")^2)
+r2p489<-r2p489[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p489,1,which.max)
+n489<-names(r2p489)[z]
+n489<-append(n489, "n489", after = 0)
+
+r2p490<-as.data.frame(cor(p490, method = "spearman")^2)
+r2p490<-r2p490[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p490,1,which.max)
+n490<-names(r2p490)[z]
+n490<-append(n490, "n490", after = 0)
+
+r2p491<-as.data.frame(cor(p491, method = "spearman")^2)
+r2p491<-r2p491[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p491,1,which.max)
+n491<-names(r2p491)[z]
+n491<-append(n491, "n491", after = 0)
+
+r2p492<-as.data.frame(cor(p492, method = "spearman")^2)
+r2p492<-r2p492[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p492,1,which.max)
+n492<-names(r2p492)[z]
+n492<-append(n492, "n492", after = 0)
+
+r2p493<-as.data.frame(cor(p493, method = "spearman")^2)
+r2p493<-r2p493[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p493,1,which.max)
+n493<-names(r2p493)[z]
+n493<-append(n493, "n493", after = 0)
+
+r2p495<-as.data.frame(cor(p495, method = "spearman")^2)
+r2p495<-r2p495[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p495,1,which.max)
+n495<-names(r2p495)[z]
+n495<-append(n495, "n495", after = 0)
+
+r2p498<-as.data.frame(cor(p498, method = "spearman")^2)
+r2p498<-r2p498[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p498,1,which.max)
+n498<-names(r2p498)[z]
+n498<-append(n498, "n498", after = 0)
+
+r2p556<-as.data.frame(cor(p556, method = "spearman")^2)
+r2p556<-r2p556[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p556,1,which.max)
+n556<-names(r2p556)[z]
+n556<-append(n556, "n556", after = 0)
+
+r2p557<-as.data.frame(cor(p557, method = "spearman")^2)
+r2p557<-r2p557[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p557,1,which.max)
+n557<-names(r2p557)[z]
+n557<-append(n557, "n557", after = 0)
+
+r2p558<-as.data.frame(cor(p558, method = "spearman")^2)
+r2p558<-r2p558[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2p558,1,which.max)
+n558<-names(r2p558)[z]
+n558<-append(n558, "n558", after = 0)
+
+r2pADV<-as.data.frame(cor(pADV, method = "spearman")^2)
+r2pADV<-r2pADV[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pADV,1,which.max)
+nADV<-names(r2pADV)[z]
+nADV<-append(nADV, "nADV", after = 0)
+
+r2pDSD<-as.data.frame(cor(pDSD, method = "spearman")^2)
+r2pDSD<-r2pDSD[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pDSD,1,which.max)
+nDSD<-names(r2pDSD)[z]
+nDSD<-append(nDSD, "nDSD", after = 0)
+
+r2pISNV<-as.data.frame(cor(pISNV, method = "spearman")^2)
+r2pISNV<-r2pISNV[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pISNV,1,which.max)
+nISNV<-names(r2pISNV)[z]
+nISNV<-append(nISNV, "nISNV", after = 0)
+
+r2pSHV<-as.data.frame(cor(pSHV, method = "spearman")^2)
+r2pSHV<-r2pSHV[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pSHV,1,which.max)
+nSHV<-names(r2pSHV)[z]
+nSHV<-append(nSHV, "nSHV", after = 0)
+
+####create data frame with spatial extend with highest R2 value related to dependent variable: ------
+lcso <- data.frame(matrix(ncol = 4, nrow = 1))
+x <- c("landc", "Totalab", "CoV", "pres" )
+colnames(lcso) <- x
+lcso<-rbind(lcso,n312,n316, n437, n484, n485, n488, n489, n490, n491, n492, n493, n495, n498, n556, n557, n558, nADV, nDSD, nISNV, nSHV)
+lcso<-lcso[-1,]
+##Drought:------
+####create individual dataframes for each variable 
+earlyvd<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("evd"))
+latevd<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("lvd"))
+meanprecip<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pwm"))
+totalprecip<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pwt"))
+
+###correlation matrices for each variable: ------
+r2evd<-as.data.frame(cor(earlyvd, method = "spearman")^2)
+r2evd<-r2evd[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2evd,1,which.max)
+nevd<-names(r2evd)[z]
+nevd<-append(nevd, "nevd", after = 0)
+
+r2lvd<-as.data.frame(cor(latevd, method = "spearman")^2)
+r2lvd<-r2lvd[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2lvd,1,which.max)
+nlvd<-names(r2lvd)[z]
+nlvd<-append(nlvd, "nlvd", after = 0)
+
+r2pwm<-as.data.frame(cor(meanprecip, method = "spearman")^2)
+r2pwm<-r2pwm[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pwm,1,which.max)
+npwm<-names(r2pwm)[z]
+npwm<-append(npwm, "npwm", after = 0)
+
+r2pwt<-as.data.frame(cor(totalprecip, method = "spearman")^2)
+r2pwt<-r2pwt[c(-1, -3, -6:-11),-1:-5]
+z<-apply(r2pwt,1,which.max)
+npwt<-names(r2pwt)[z]
+npwt<-append(npwt, "npwt", after = 0)
+
+####create dataframe ------
+dso <- data.frame(matrix(ncol = 4, nrow = 1))
+x <- c("drought", "Totalab", "CoV", "pres" )
+colnames(dso) <- x
+dso<-rbind(dso,nevd, nlvd, npwm, npwt)
+dso<-dso[-1,]
+
+
+#subset out varibles of interest for each dependent variable based on spatial optimization -------
+BRSP_totab<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, lcso$Totalab, dso$Totalab, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
+  write.csv(.,file = "BRSP_totab.csv")
+BRSP_CoV<-BRSPdata_all %>% 
+  dplyr::select(RouteID, CoV, lcso$CoV, dso$CoV, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
+  write.csv(.,file = "BRSP_CoV.csv")
+BRSP_pres<-BRSPdata_all %>% 
+  dplyr::select(RouteID, pres, lcso$pres, dso$pres, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
+  write.csv(.,file = "BRSP_pres.csv")
+
