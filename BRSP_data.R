@@ -137,7 +137,7 @@ write.csv(BRSPab, file = "BRSP_Data0913.csv")
 BRSP_cov<-BRSPab[,1:2]#get routes of study
 head(BRSP_cov)
 
-noiseraw<-read.csv("C:/Users/kim_serno1/Documents/PhD/Dissertation/BBS_manipulation/data_files/Unzipped/VehicleData.csv", stringsAsFactors = FALSE)
+noiseraw<-read.csv("BBS_manipulation/data_files/Unzipped/VehicleData.csv", stringsAsFactors = FALSE)
 head(noiseraw)
 noiseraw$RouteID<-((noiseraw$StateNum*1000)+noiseraw$Route)
 head(noiseraw)
@@ -172,67 +172,101 @@ noise<-left_join(noise, noise13, by = "RouteID")
 
 
 
-weatherraw<-read.csv('C:/Users/kim_serno1/Documents/PhD/Dissertation/BBS_manipulation/data_files/Unzipped/weather.csv')
-weatherraw$RouteID<-((weatherraw$StateNum*1000)+weatherraw$Route)
+weatherraw<-read.csv('BBS_manipulation/data_files/Unzipped/weather.csv', stringsAsFactors = FALSE) %>% 
+  mutate(RouteID = (StateNum * 1000) + Route) %>% 
+  filter(RPID == 101) %>% 
+  select(RouteID, Year, Month, Day, ObsN, EndTemp, QualityCurrentID) %>%
+  mutate(date = as.Date(paste(Year, Month, Day, sep="-"))) %>% 
+  mutate(yday = yday(date))
 head(weatherraw)
-weatherraw<-subset(weatherraw, RPID == 101, select = c(RouteID, Year, Month, Day, ObsN, EndTemp, QualityCurrentID, RunType))
-head(weatherraw)
-weatherraw$date<-as.Date(paste(weatherraw$Year,weatherraw$Month,weatherraw$Day, sep="-"))
-weatherraw$yday<-yday(weatherraw$date)
-head(weatherraw)
+
 weather09<-weatherraw %>% 
   subset(Year == 2009, select = c(-Year, -Month, -Day)) %>% 
+  mutate(sday = yday - yday("2009-04-15")) %>% 
   dplyr::rename(
     ObsN09 = ObsN,
     EndTemp09 = EndTemp,
     QualityCurrentID09 = QualityCurrentID,
-    RunType09 = RunType,
     yday09 = yday,
-    day09 = date
+    date09 = date, 
+    sday09 = sday
   )
+
 weather10<-weatherraw %>% 
   subset(Year == 2010, select = c(-Year, -Month, -Day)) %>% 
+  mutate(sday = yday - yday("2010-04-15")) %>% 
   dplyr::rename(
     ObsN10 = ObsN,
     EndTemp10 = EndTemp,
     QualityCurrentID10 = QualityCurrentID,
-    RunType10 = RunType,
     yday10 = yday,
-    day10 = date
+    date10 = date, 
+    sday10 = sday
   )
+
 weather11<-weatherraw %>% 
   subset(Year == 2011, select = c(-Year, -Month, -Day)) %>% 
+  mutate(sday = yday - yday("2011-04-15")) %>% 
   dplyr::rename(
     ObsN11 = ObsN,
     EndTemp11 = EndTemp,
     QualityCurrentID11 = QualityCurrentID,
-    RunType11 = RunType,
     yday11 = yday,
-    day11 = date
+    date11 = date, 
+    sday11 = sday
   )
+
 weather12<-weatherraw %>% 
   subset(Year == 2012, select = c(-Year, -Month, -Day)) %>% 
+  mutate(sday = yday - yday("2012-04-15")) %>% 
   dplyr::rename(
     ObsN12 = ObsN,
     EndTemp12 = EndTemp,
     QualityCurrentID12 = QualityCurrentID,
-    RunType12 = RunType,
     yday12 = yday,
-    day12 = date
+    date12 = date, 
+    sday12 = sday
   )
+
 weather13<-weatherraw %>% 
   subset(Year == 2013, select = c(-Year, -Month, -Day)) %>% 
+  mutate(sday = yday - yday("2013-04-15")) %>% 
   dplyr::rename(
     ObsN13 = ObsN,
     EndTemp13 = EndTemp,
     QualityCurrentID13 = QualityCurrentID,
-    RunType13 = RunType,
     yday13 = yday,
-    day13 = date
+    date13 = date, 
+    sday13 = sday
   )
 
-weather<-left_join(BRSP_cov, weather09, by = "RouteID")
-weather<-left_join(weather, weather10, by = "RouteID")
-weather<-left_join(weather, weather11, by = "RouteID")
-weather<-left_join(weather, weather12, by = "RouteID")
-weather<-left_join(weather, weather13, by = "RouteID")
+weather<-BRSP_cov %>% 
+  left_join(weather09, by = "RouteID") %>% 
+  left_join(weather10, by = "RouteID") %>% 
+  left_join(weather12, by = "RouteID") %>% 
+  left_join(weather13, by = "RouteID") %>% 
+  left_join(weather11, by = "RouteID")
+weather[,2:32]<-as.numeric(unlist(weather[,2:32])) #change values to numeric
+obs<-weather %>% 
+  select(RouteID, starts_with("ObsN")) %>% 
+  mutate(countobs = apply(.[,2:6], 1, function(x)length(unique(x)))) %>% 
+  select(RouteID, countobs)
+temp<-weather %>% 
+  select(RouteID, starts_with("EndTemp")) %>% 
+  mutate(mean_temp = rowMeans(.[,2:6])) %>% 
+  select(RouteID, mean_temp)
+quality<-weather %>% 
+  select(RouteID, starts_with("Quality")) %>% 
+  mutate(prop_quality = rowMeans(.[,2:6])) %>% 
+  select(RouteID, prop_quality)
+sday<-weather %>% 
+  select(RouteID, starts_with("sday")) %>% 
+  mutate(msday = rowMeans(.[,2:6])) %>% 
+  select(RouteID, msday)
+SurveyCov<-obs %>% 
+  left_join(temp, by = "RouteID") %>% 
+  left_join(quality, by = "RouteID") %>% 
+  left_join(sday, by = "RouteID") 
+
+write.csv(SurveyCov, file = "SurveyCov.csv") 
+  
