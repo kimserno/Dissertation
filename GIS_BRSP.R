@@ -255,26 +255,26 @@ lc400m<-left_join(lc400m, Broadlc400m, by = "RouteID")
 head(lc400m)
 ###get proportions of landcover of interest: -----
 lc400m<-lc400m %>% 
-  mutate(p312_400m = (x312/Sum)*100) %>% 
-  mutate(p316_400m = (x316/Sum)*100) %>% 
-  mutate(p437_400m = (x437/Sum)*100) %>% 
-  mutate(p484_400m = (x484/Sum)*100) %>% 
-  mutate(p485_400m = (x485/Sum)*100) %>% 
-  mutate(p488_400m = (x488/Sum)*100) %>% 
-  mutate(p489_400m = (x489/Sum)*100) %>% 
-  mutate(p490_400m = (x490/Sum)*100) %>% 
-  mutate(p491_400m = (x491/Sum)*100) %>% 
-  mutate(p492_400m = (x492/Sum)*100) %>% 
-  mutate(p493_400m = (x493/Sum)*100) %>% 
-  mutate(p495_400m = (x495/Sum)*100) %>% 
-  mutate(p498_400m = (x498/Sum)*100) %>% 
-  mutate(p556_400m = (x556/Sum)*100) %>% 
-  mutate(p557_400m = (x557/Sum)*100) %>% 
-  mutate(p558_400m = (x558/Sum)*100) %>% 
-  mutate(pSHV_400m = (SHV/Sum)*100) %>% 
-  mutate(pDSD_400m = (DSD/Sum)*100) %>% 
-  mutate(pADV_400m = (ADV/Sum)*100) %>% 
-  mutate(pISNV_400m = (ISNV/Sum)*100) 
+  mutate(p312_400m = (x312/Sum)) %>% 
+  mutate(p316_400m = (x316/Sum)) %>% 
+  mutate(p437_400m = (x437/Sum)) %>% 
+  mutate(p484_400m = (x484/Sum)) %>% 
+  mutate(p485_400m = (x485/Sum)) %>% 
+  mutate(p488_400m = (x488/Sum)) %>% 
+  mutate(p489_400m = (x489/Sum)) %>% 
+  mutate(p490_400m = (x490/Sum)) %>% 
+  mutate(p491_400m = (x491/Sum)) %>% 
+  mutate(p492_400m = (x492/Sum)) %>% 
+  mutate(p493_400m = (x493/Sum)) %>% 
+  mutate(p495_400m = (x495/Sum)) %>% 
+  mutate(p498_400m = (x498/Sum)) %>% 
+  mutate(p556_400m = (x556/Sum)) %>% 
+  mutate(p557_400m = (x557/Sum)) %>% 
+  mutate(p558_400m = (x558/Sum)) %>% 
+  mutate(pSHV_400m = (SHV/Sum)) %>% 
+  mutate(pDSD_400m = (DSD/Sum)) %>% 
+  mutate(pADV_400m = (ADV/Sum)) %>% 
+  mutate(pISNV_400m = (ISNV/Sum)) 
   
 
 head(lc400m)
@@ -327,26 +327,26 @@ lc1km<-left_join(lc1km, Broadlc1km, by = "RouteID")
 head(lc1km)
 ###get proportions of landcover of interest: -----
 lc1km<-lc1km %>% 
-  mutate(p312_1km = (x312/Sum)*100) %>% 
-  mutate(p316_1km = (x316/Sum)*100) %>% 
-  mutate(p437_1km = (x437/Sum)*100) %>% 
-  mutate(p484_1km = (x484/Sum)*100) %>% 
-  mutate(p485_1km = (x485/Sum)*100) %>% 
-  mutate(p488_1km = (x488/Sum)*100) %>% 
-  mutate(p489_1km = (x489/Sum)*100) %>% 
-  mutate(p490_1km = (x490/Sum)*100) %>% 
-  mutate(p491_1km = (x491/Sum)*100) %>% 
-  mutate(p492_1km = (x492/Sum)*100) %>% 
-  mutate(p493_1km = (x493/Sum)*100) %>% 
-  mutate(p495_1km = (x495/Sum)*100) %>% 
-  mutate(p498_1km = (x498/Sum)*100) %>% 
-  mutate(p556_1km = (x556/Sum)*100) %>% 
-  mutate(p557_1km = (x557/Sum)*100) %>% 
-  mutate(p558_1km = (x558/Sum)*100) %>% 
-  mutate(pSHV_1km = (SHV/Sum)*100) %>% 
-  mutate(pDSD_1km = (DSD/Sum)*100) %>% 
-  mutate(pADV_1km = (ADV/Sum)*100) %>% 
-  mutate(pISNV_1km = (ISNV/Sum)*100) 
+  mutate(p312_1km = (x312/Sum)) %>% 
+  mutate(p316_1km = (x316/Sum)) %>% 
+  mutate(p437_1km = (x437/Sum)) %>% 
+  mutate(p484_1km = (x484/Sum)) %>% 
+  mutate(p485_1km = (x485/Sum)) %>% 
+  mutate(p488_1km = (x488/Sum)) %>% 
+  mutate(p489_1km = (x489/Sum)) %>% 
+  mutate(p490_1km = (x490/Sum)) %>% 
+  mutate(p491_1km = (x491/Sum)) %>% 
+  mutate(p492_1km = (x492/Sum)) %>% 
+  mutate(p493_1km = (x493/Sum)) %>% 
+  mutate(p495_1km = (x495/Sum)) %>% 
+  mutate(p498_1km = (x498/Sum)) %>% 
+  mutate(p556_1km = (x556/Sum)) %>% 
+  mutate(p557_1km = (x557/Sum)) %>% 
+  mutate(p558_1km = (x558/Sum)) %>% 
+  mutate(pSHV_1km = (SHV/Sum)) %>% 
+  mutate(pDSD_1km = (DSD/Sum)) %>% 
+  mutate(pADV_1km = (ADV/Sum)) %>% 
+  mutate(pISNV_1km = (ISNV/Sum)) 
 
 
 head(lc1km)
@@ -398,26 +398,26 @@ lc4km<-left_join(lc4km, Broadlc4km, by = "RouteID")
 head(lc4km)
 ###get proportions of landcover of interest: -----
 lc4km<-lc4km %>% 
-  mutate(p312_4km = (x312/Sum)*100) %>% 
-  mutate(p316_4km = (x316/Sum)*100) %>% 
-  mutate(p437_4km = (x437/Sum)*100) %>% 
-  mutate(p484_4km = (x484/Sum)*100) %>% 
-  mutate(p485_4km = (x485/Sum)*100) %>% 
-  mutate(p488_4km = (x488/Sum)*100) %>% 
-  mutate(p489_4km = (x489/Sum)*100) %>% 
-  mutate(p490_4km = (x490/Sum)*100) %>% 
-  mutate(p491_4km = (x491/Sum)*100) %>% 
-  mutate(p492_4km = (x492/Sum)*100) %>% 
-  mutate(p493_4km = (x493/Sum)*100) %>% 
-  mutate(p495_4km = (x495/Sum)*100) %>% 
-  mutate(p498_4km = (x498/Sum)*100) %>% 
-  mutate(p556_4km = (x556/Sum)*100) %>% 
-  mutate(p557_4km = (x557/Sum)*100) %>% 
-  mutate(p558_4km = (x558/Sum)*100) %>% 
-  mutate(pSHV_4km = (SHV/Sum)*100) %>% 
-  mutate(pDSD_4km = (DSD/Sum)*100) %>% 
-  mutate(pADV_4km = (ADV/Sum)*100) %>% 
-  mutate(pISNV_4km = (ISNV/Sum)*100) 
+  mutate(p312_4km = (x312/Sum)) %>% 
+  mutate(p316_4km = (x316/Sum)) %>% 
+  mutate(p437_4km = (x437/Sum)) %>% 
+  mutate(p484_4km = (x484/Sum)) %>% 
+  mutate(p485_4km = (x485/Sum)) %>% 
+  mutate(p488_4km = (x488/Sum)) %>% 
+  mutate(p489_4km = (x489/Sum)) %>% 
+  mutate(p490_4km = (x490/Sum)) %>% 
+  mutate(p491_4km = (x491/Sum)) %>% 
+  mutate(p492_4km = (x492/Sum)) %>% 
+  mutate(p493_4km = (x493/Sum)) %>% 
+  mutate(p495_4km = (x495/Sum)) %>% 
+  mutate(p498_4km = (x498/Sum)) %>% 
+  mutate(p556_4km = (x556/Sum)) %>% 
+  mutate(p557_4km = (x557/Sum)) %>% 
+  mutate(p558_4km = (x558/Sum)) %>% 
+  mutate(pSHV_4km = (SHV/Sum)) %>% 
+  mutate(pDSD_4km = (DSD/Sum)) %>% 
+  mutate(pADV_4km = (ADV/Sum)) %>% 
+  mutate(pISNV_4km = (ISNV/Sum)) 
 
 
 head(lc4km)
@@ -469,26 +469,26 @@ lc5km<-left_join(lc5km, Broadlc5km, by = "RouteID")
 head(lc5km)
 ###get proportions of landcover of interest: -----
 lc5km<-lc5km %>% 
-  mutate(p312_5km = (x312/Sum)*100) %>% 
-  mutate(p316_5km = (x316/Sum)*100) %>% 
-  mutate(p437_5km = (x437/Sum)*100) %>% 
-  mutate(p484_5km = (x484/Sum)*100) %>% 
-  mutate(p485_5km = (x485/Sum)*100) %>% 
-  mutate(p488_5km = (x488/Sum)*100) %>% 
-  mutate(p489_5km = (x489/Sum)*100) %>% 
-  mutate(p490_5km = (x490/Sum)*100) %>% 
-  mutate(p491_5km = (x491/Sum)*100) %>% 
-  mutate(p492_5km = (x492/Sum)*100) %>% 
-  mutate(p493_5km = (x493/Sum)*100) %>% 
-  mutate(p495_5km = (x495/Sum)*100) %>% 
-  mutate(p498_5km = (x498/Sum)*100) %>% 
-  mutate(p556_5km = (x556/Sum)*100) %>% 
-  mutate(p557_5km = (x557/Sum)*100) %>% 
-  mutate(p558_5km = (x558/Sum)*100) %>% 
-  mutate(pSHV_5km = (SHV/Sum)*100) %>% 
-  mutate(pDSD_5km = (DSD/Sum)*100) %>% 
-  mutate(pADV_5km = (ADV/Sum)*100) %>% 
-  mutate(pISNV_5km = (ISNV/Sum)*100) 
+  mutate(p312_5km = (x312/Sum)) %>% 
+  mutate(p316_5km = (x316/Sum)) %>% 
+  mutate(p437_5km = (x437/Sum)) %>% 
+  mutate(p484_5km = (x484/Sum)) %>% 
+  mutate(p485_5km = (x485/Sum)) %>% 
+  mutate(p488_5km = (x488/Sum)) %>% 
+  mutate(p489_5km = (x489/Sum)) %>% 
+  mutate(p490_5km = (x490/Sum)) %>% 
+  mutate(p491_5km = (x491/Sum)) %>% 
+  mutate(p492_5km = (x492/Sum)) %>% 
+  mutate(p493_5km = (x493/Sum)) %>% 
+  mutate(p495_5km = (x495/Sum)) %>% 
+  mutate(p498_5km = (x498/Sum)) %>% 
+  mutate(p556_5km = (x556/Sum)) %>% 
+  mutate(p557_5km = (x557/Sum)) %>% 
+  mutate(p558_5km = (x558/Sum)) %>% 
+  mutate(pSHV_5km = (SHV/Sum)) %>% 
+  mutate(pDSD_5km = (DSD/Sum)) %>% 
+  mutate(pADV_5km = (ADV/Sum)) %>% 
+  mutate(pISNV_5km = (ISNV/Sum)) 
 
 
 head(lc5km)
@@ -540,26 +540,26 @@ lc8km<-left_join(lc8km, Broadlc8km, by = "RouteID")
 head(lc8km)
 ###get proportions of landcover of interest: -----
 lc8km<-lc8km %>% 
-  mutate(p312_8km = (x312/Sum)*100) %>% 
-  mutate(p316_8km = (x316/Sum)*100) %>% 
-  mutate(p437_8km = (x437/Sum)*100) %>% 
-  mutate(p484_8km = (x484/Sum)*100) %>% 
-  mutate(p485_8km = (x485/Sum)*100) %>% 
-  mutate(p488_8km = (x488/Sum)*100) %>% 
-  mutate(p489_8km = (x489/Sum)*100) %>% 
-  mutate(p490_8km = (x490/Sum)*100) %>% 
-  mutate(p491_8km = (x491/Sum)*100) %>% 
-  mutate(p492_8km = (x492/Sum)*100) %>% 
-  mutate(p493_8km = (x493/Sum)*100) %>% 
-  mutate(p495_8km = (x495/Sum)*100) %>% 
-  mutate(p498_8km = (x498/Sum)*100) %>% 
-  mutate(p556_8km = (x556/Sum)*100) %>% 
-  mutate(p557_8km = (x557/Sum)*100) %>% 
-  mutate(p558_8km = (x558/Sum)*100) %>% 
-  mutate(pSHV_8km = (SHV/Sum)*100) %>% 
-  mutate(pDSD_8km = (DSD/Sum)*100) %>% 
-  mutate(pADV_8km = (ADV/Sum)*100) %>% 
-  mutate(pISNV_8km = (ISNV/Sum)*100) 
+  mutate(p312_8km = (x312/Sum)) %>% 
+  mutate(p316_8km = (x316/Sum)) %>% 
+  mutate(p437_8km = (x437/Sum)) %>% 
+  mutate(p484_8km = (x484/Sum)) %>% 
+  mutate(p485_8km = (x485/Sum)) %>% 
+  mutate(p488_8km = (x488/Sum)) %>% 
+  mutate(p489_8km = (x489/Sum)) %>% 
+  mutate(p490_8km = (x490/Sum)) %>% 
+  mutate(p491_8km = (x491/Sum)) %>% 
+  mutate(p492_8km = (x492/Sum)) %>% 
+  mutate(p493_8km = (x493/Sum)) %>% 
+  mutate(p495_8km = (x495/Sum)) %>% 
+  mutate(p498_8km = (x498/Sum)) %>% 
+  mutate(p556_8km = (x556/Sum)) %>% 
+  mutate(p557_8km = (x557/Sum)) %>% 
+  mutate(p558_8km = (x558/Sum)) %>% 
+  mutate(pSHV_8km = (SHV/Sum)) %>% 
+  mutate(pDSD_8km = (DSD/Sum)) %>% 
+  mutate(pADV_8km = (ADV/Sum)) %>% 
+  mutate(pISNV_8km = (ISNV/Sum)) 
 
 
 head(lc8km)
@@ -611,26 +611,26 @@ lc20km<-left_join(lc20km, Broadlc20km, by = "RouteID")
 head(lc20km)
 ###get proportions of landcover of interest: -----
 lc20km<-lc20km %>% 
-  mutate(p312_20km = (x312/Sum)*100) %>% 
-  mutate(p316_20km = (x316/Sum)*100) %>% 
-  mutate(p437_20km = (x437/Sum)*100) %>% 
-  mutate(p484_20km = (x484/Sum)*100) %>% 
-  mutate(p485_20km = (x485/Sum)*100) %>% 
-  mutate(p488_20km = (x488/Sum)*100) %>% 
-  mutate(p489_20km = (x489/Sum)*100) %>% 
-  mutate(p490_20km = (x490/Sum)*100) %>% 
-  mutate(p491_20km = (x491/Sum)*100) %>% 
-  mutate(p492_20km = (x492/Sum)*100) %>% 
-  mutate(p493_20km = (x493/Sum)*100) %>% 
-  mutate(p495_20km = (x495/Sum)*100) %>% 
-  mutate(p498_20km = (x498/Sum)*100) %>% 
-  mutate(p556_20km = (x556/Sum)*100) %>% 
-  mutate(p557_20km = (x557/Sum)*100) %>% 
-  mutate(p558_20km = (x558/Sum)*100) %>% 
-  mutate(pSHV_20km = (SHV/Sum)*100) %>% 
-  mutate(pDSD_20km = (DSD/Sum)*100) %>% 
-  mutate(pADV_20km = (ADV/Sum)*100) %>% 
-  mutate(pISNV_20km = (ISNV/Sum)*100) 
+  mutate(p312_20km = (x312/Sum)) %>% 
+  mutate(p316_20km = (x316/Sum)) %>% 
+  mutate(p437_20km = (x437/Sum)) %>% 
+  mutate(p484_20km = (x484/Sum)) %>% 
+  mutate(p485_20km = (x485/Sum)) %>% 
+  mutate(p488_20km = (x488/Sum)) %>% 
+  mutate(p489_20km = (x489/Sum)) %>% 
+  mutate(p490_20km = (x490/Sum)) %>% 
+  mutate(p491_20km = (x491/Sum)) %>% 
+  mutate(p492_20km = (x492/Sum)) %>% 
+  mutate(p493_20km = (x493/Sum)) %>% 
+  mutate(p495_20km = (x495/Sum)) %>% 
+  mutate(p498_20km = (x498/Sum)) %>% 
+  mutate(p556_20km = (x556/Sum)) %>% 
+  mutate(p557_20km = (x557/Sum)) %>% 
+  mutate(p558_20km = (x558/Sum)) %>% 
+  mutate(pSHV_20km = (SHV/Sum)) %>% 
+  mutate(pDSD_20km = (DSD/Sum)) %>% 
+  mutate(pADV_20km = (ADV/Sum)) %>% 
+  mutate(pISNV_20km = (ISNV/Sum)) 
 
 
 head(lc20km)
@@ -668,6 +668,7 @@ May1709<-reclassify(May1709, rcl2)
 summary(May1709@data@values)
 May1709[May1709 == 0]<-NA
 summary(May1709@data@values)
+
 
 july2609<-raster("/Volumes/Samsung_USB/VegDRI/2009/vegdri_emodis_week30_072609.tif")
 # july2609<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2009/vegdri_emodis_week30_072609.tif")
@@ -713,6 +714,7 @@ May1610<-reclassify(May1610, rcl2)
 # plot(May1610)
 summary(May1610@data@values)
 May1610[May1610 == 0]<-NA
+
 
 july2510<-raster("/Volumes/Samsung_USB/VegDRI/2010/vegdri_emodis_week30_072510.tif")
 # july2510<-raster("C:/Users/kim_serno1/Documents/PhD/GIS/Dissertation/data/unzipped/VegDRI/2010/vegdri_emodis_week30_072510.tif")
@@ -871,7 +873,7 @@ July2813<-reclassify(July2813, rcl2)
 summary(July2813@data@values)
 July2813[July2813 == 0]<-NA
 
-# VegDRI mean of early and end season rasters =====
+# VegDRI mean of early, end season rasters =====
 earlyvd<-mosaic(May1709, May1610, May1511, May1312, May1913, fun = mean, na.rm = TRUE)
 latevd<-mosaic(July2609, July2510, July2411, July2212, July2813, fun = mean, na.rm = TRUE)
 #VegDRI extract and mean across buffers ----
