@@ -20,7 +20,7 @@ BRSP_BBSroutes<-read.csv("BRSP_routesGIS.csv")
 # BRSP_BBSroutes<-read.csv("BBS_manipulation/data_files/Unzipped/BRSP_BBSroutes2.csv")
 head(BRSP_BBSroutes)
 
-BRSProutes<-left_join(x=BRSP_BBSroutes, y=BRSP_BBSroutes, by ="RouteID")
+BRSProutes<-left_join(x=BRSP_BBSroutes, y=BBSroutes, by ="RouteID")
 head(BRSProutes)
 
 
@@ -503,12 +503,12 @@ dso<-dso[-1,]
 
 #subset out varibles of interest for each dependent variable based on spatial optimization -------
 BRSP_totab<-BRSPdata_all %>% 
-  dplyr::select(RouteID, Totalab, lcso$Totalab, dso$Totalab, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
-  write.csv(.,file = "BRSP_totab.csv")
+  dplyr::select(RouteID, Totalab, lcso$Totalab, dso$Totalab, countobs, mean_temp, prop_quality, msday, mean_noise) 
+  write.csv(BRSP_totab,file = "BRSP_totab.csv")
 BRSP_CoV<-BRSPdata_all %>% 
-  dplyr::select(RouteID, CoV, lcso$CoV, dso$CoV, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
-  write.csv(.,file = "BRSP_CoV.csv")
+  dplyr::select(RouteID, CoV, lcso$CoV, dso$CoV, countobs, mean_temp, prop_quality, msday, mean_noise)
+write.csv(BRSP_CoV,file = "BRSP_CoV.csv")
 BRSP_pres<-BRSPdata_all %>% 
-  dplyr::select(RouteID, pres, lcso$pres, dso$pres, countobs, mean_temp, prop_quality, msday, mean_noise) %>% 
-  write.csv(.,file = "BRSP_pres.csv")
+  dplyr::select(RouteID, pres, lcso$pres, dso$pres, countobs, mean_temp, prop_quality, msday, mean_noise) 
+write.csv(BRSP_pres,file = "BRSP_pres.csv")
 
