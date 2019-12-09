@@ -192,6 +192,19 @@ pred<-predict(m, BRSP_pres)
 table(pred, BRSP_pres$pres)
 #error - 0%
 
+ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
+grid<-expand.grid(.model = c("rules", "tree"),
+                  .trials = c(1, 5, 10, 15, 20, 25, 30, 35),
+                  .winnow = "FALSE")
+
+set.seed(123)
+m<-train(as.factor(pres) ~ ., data = BRSP_pres, method = "C5.0", metric = "Kappa", trControl = ctrl, tuneGrid = grid)
+m
+summary(m$finalModel)
+pred<-predict(m, BRSP_pres)
+table(pred, BRSP_pres$pres)
+#error - 0%
+
 #bootstrapping:
 ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
 grid<-expand.grid(.model = c("rules", "tree"),
@@ -219,9 +232,10 @@ table(pred, BRSP_pres$pres)
 
 #bagging:
 set.seed(123)
-mybag<-bagging(as.factor(pres) ~ ., data = BRSP_pres, nbag = 25)
+BRSP_pres$pres<-factor(BRSP_pres$pres)
+mybag<-bagging(pres ~ ., data = BRSP_pres, nbag = 25)
 pres_pred<-predict(mybag, BRSP_pres)
-table(pres_pred, BRSP_pres$pres)
+table(pres_pred, as.numeric(BRSP_pres$pres))
 #error: 0%
 
 
@@ -297,6 +311,18 @@ MAE(pred, BRSP_totab$Totalab)
 #36.1603
 
 #control object:
+ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
+grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
+set.seed(123)
+m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m
+summary(m$finalModel)
+pred<-predict(m, BRSP_totab)
+cor(pred, BRSP_totab$Totalab)
+#0.7216157
+MAE(pred, BRSP_totab$Totalab)
+#33.38537
+
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
@@ -313,10 +339,10 @@ MAE(pred, BRSP_totab$Totalab)
 ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
-m
+bsbm<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+bsbm
 summary(m$finalModel)
-pred<-predict(m, BRSP_totab)
+pred<-predict(bsbm, BRSP_totab)
 cor(pred, BRSP_totab$Totalab)
 #0.8167321
 MAE(pred, BRSP_totab$Totalab)
@@ -380,6 +406,18 @@ MAE(pred, BRSP_CoV$CoV)
 #0.3372078
 
 #control object:
+ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
+grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
+set.seed(123)
+m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m
+summary(m$finalModel)
+pred<-predict(m, BRSP_CoV)
+cor(pred, BRSP_CoV$CoV)
+#0.3535036
+MAE(pred, BRSP_CoV$CoV)
+#0.2756712
+
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
@@ -438,7 +476,7 @@ plot(totab_nnm)
 totab_nnm$result.matrix
 #error (SSE) =1.359655, steps: 1017
 #evalute performance:
-totab_model_results<-compute(totab_nnm, totab_n_test[2:30])
+totab_model_results<-neuralnet::compute(totab_nnm, totab_n_test[2:30])
 totab_predicted_strength<-totab_model_results$net.result
 cor(totab_predicted_strength, totab_n_test$Totalab)
 #0.7580125
@@ -453,12 +491,25 @@ totab_nnm2<- neuralnet(Totalab ~ ., data = totab_n_train, hidden = 5)
 plot(totab_nnm2)
 totab_nnm2$result.matrix
 #error = 0.1729141, steps = 5828
-totab_model_results2<-compute(totab_nnm2, totab_n_test[2:30])
+totab_model_results2<-neuralnet::compute(totab_nnm2, totab_n_test[2:30])
 totab_predicted_strength2<-totab_model_results2$net.result
 cor(totab_predicted_strength2, totab_n_test$Totalab)
 #0.702901 # correlation decreased
 MAE(totab_predicted_strength2, totab_n_test$Totalab)
 #0.09836915 #MAE a bit higher but still lower than predicting every value is mean totab
+#try 3 layers
+set.seed(123)
+totab_nnm3<- neuralnet(Totalab ~ ., data = totab_n_train, hidden = 3)
+plot(totab_nnm3)
+totab_nnm3$result.matrix
+#error = 0.4899430, steps = 3697
+totab_model_results3<-neuralnet::compute(totab_nnm3, totab_n_test[2:30])
+totab_predicted_strength3<-totab_model_results3$net.result
+cor(totab_predicted_strength3, totab_n_test$totab)
+#0.1543845 - correlation has gotten worse
+MAE(totab_predicted_strength3, totab_n_test$totab)
+#0.1240324 - MAE has increased and is higher than if all predicted values = mean CoV
+
 #CoV
 CoV_n_train<-CoV_n[train_sample, ]
 CoV_n_test<-CoV_n[-train_sample, ]
@@ -468,7 +519,7 @@ plot(CoV_nnm)
 CoV_nnm$result.matrix
 #error (SSE) = 4.020312852, steps: 759
 #evalute performance:
-CoV_model_results<-compute(CoV_nnm, CoV_n_test[2:30])
+CoV_model_results<-neuralnet::compute(CoV_nnm, CoV_n_test[2:30])
 CoV_predicted_strength<-CoV_model_results$net.result
 cor(CoV_predicted_strength, CoV_n_test$CoV)
 #0.3061089
@@ -483,7 +534,7 @@ CoV_nnm2<- neuralnet(CoV ~ ., data = CoV_n_train, hidden = 5)
 plot(CoV_nnm2)
 CoV_nnm2$result.matrix
 #error = 0.81749384, steps = 9985
-CoV_model_results2<-compute(CoV_nnm2, CoV_n_test[2:30])
+CoV_model_results2<-neuralnet::compute(CoV_nnm2, CoV_n_test[2:30])
 CoV_predicted_strength2<-CoV_model_results2$net.result
 cor(CoV_predicted_strength2, CoV_n_test$CoV)
 #0.05161386 - correlation has gotten worse
@@ -495,7 +546,7 @@ CoV_nnm3<- neuralnet(CoV ~ ., data = CoV_n_train, hidden = 3)
 plot(CoV_nnm3)
 CoV_nnm3$result.matrix
 #error = 1.741966, steps = 8310
-CoV_model_results3<-compute(CoV_nnm3, CoV_n_test[2:30])
+CoV_model_results3<-neuralnet::compute(CoV_nnm3, CoV_n_test[2:30])
 CoV_predicted_strength3<-CoV_model_results3$net.result
 cor(CoV_predicted_strength3, CoV_n_test$CoV)
 #0.1543845 - correlation has gotten worse
@@ -648,7 +699,8 @@ summary(pres_rf)
 importance(pres_rf)
 varImpPlot(pres_rf)
 
-#evaluate performance:
+#evaluate performance/improve model:
+BRSP_pres$pres<-as.factor(BRSP_pres$pres)
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10)
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(123)
