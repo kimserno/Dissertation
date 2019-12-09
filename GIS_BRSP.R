@@ -75,11 +75,11 @@ fc_list<-ogrListLayers(brsp_GDB)
 print(fc_list)
 
 BRSP_breeding<-readOGR(dsn=brsp_GDB, layer = "BRSP_BreedingUS")
-plot(BRSP_breeding, col = "green")
+plot(BRSP_breeding, col = "wheat3")
 #summary(BRSP_breeding)
 
 us<-readOGR(dsn=brsp_GDB, layer = "US_48States")
-plot(us, add=TRUE,col = "wheat3")
+plot(us, add=TRUE)
 #summary(us)
 
 
