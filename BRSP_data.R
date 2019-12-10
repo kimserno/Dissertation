@@ -331,121 +331,121 @@ pISNV<-BRSPdata_all %>%
   dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pISNV"))
 
 ###correlation matrices for each variable: ------
-r2p312<-as.data.frame(cor(p312, method = "spearman")^2)
+r2p312<-as.data.frame(cor(p312, method = "spearman"))
 r2p312<-r2p312[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p312,1,which.max)
 n312<-names(r2p312)[z]
 n312<-append(n312, "n312", after = 0)
 
-r2p316<-as.data.frame(cor(p316, method = "spearman")^2)
+r2p316<-as.data.frame(cor(p316, method = "spearman"))
 r2p316<-r2p316[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p316,1,which.max)
 n316<-names(r2p316)[z]
 n316<-append(n316, "n316", after = 0)
 
-r2p437<-as.data.frame(cor(p437, method = "spearman")^2)
+r2p437<-as.data.frame(cor(p437, method = "spearman"))
 r2p437<-r2p437[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p437,1,which.max)
 n437<-names(r2p437)[z]
 n437<-append(n437, "n437", after = 0)
 
-r2p484<-as.data.frame(cor(p484, method = "spearman")^2)
+r2p484<-as.data.frame(cor(p484, method = "spearman"))
 r2p484<-r2p484[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p484,1,which.max)
 n484<-names(r2p484)[z]
 n484<-append(n484, "n484", after = 0)
 
-r2p485<-as.data.frame(cor(p485, method = "spearman")^2)
+r2p485<-as.data.frame(cor(p485, method = "spearman"))
 r2p485<-r2p485[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p485,1,which.max)
 n485<-names(r2p485)[z]
 n485<-append(n485, "n485", after = 0)
 
-r2p488<-as.data.frame(cor(p488, method = "spearman")^2)
+r2p488<-as.data.frame(cor(p488, method = "spearman"))
 r2p488<-r2p488[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p488,1,which.max)
 n488<-names(r2p488)[z]
 n488<-append(n488, "n488", after = 0)
 
-r2p489<-as.data.frame(cor(p489, method = "spearman")^2)
+r2p489<-as.data.frame(cor(p489, method = "spearman"))
 r2p489<-r2p489[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p489,1,which.max)
 n489<-names(r2p489)[z]
 n489<-append(n489, "n489", after = 0)
 
-r2p490<-as.data.frame(cor(p490, method = "spearman")^2)
+r2p490<-as.data.frame(cor(p490, method = "spearman"))
 r2p490<-r2p490[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p490,1,which.max)
 n490<-names(r2p490)[z]
 n490<-append(n490, "n490", after = 0)
 
-r2p491<-as.data.frame(cor(p491, method = "spearman")^2)
+r2p491<-as.data.frame(cor(p491, method = "spearman"))
 r2p491<-r2p491[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p491,1,which.max)
 n491<-names(r2p491)[z]
 n491<-append(n491, "n491", after = 0)
 
-r2p492<-as.data.frame(cor(p492, method = "spearman")^2)
+r2p492<-as.data.frame(cor(p492, method = "spearman"))
 r2p492<-r2p492[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p492,1,which.max)
 n492<-names(r2p492)[z]
 n492<-append(n492, "n492", after = 0)
 
-r2p493<-as.data.frame(cor(p493, method = "spearman")^2)
+r2p493<-as.data.frame(cor(p493, method = "spearman"))
 r2p493<-r2p493[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p493,1,which.max)
 n493<-names(r2p493)[z]
 n493<-append(n493, "n493", after = 0)
 
-r2p495<-as.data.frame(cor(p495, method = "spearman")^2)
+r2p495<-as.data.frame(cor(p495, method = "spearman"))
 r2p495<-r2p495[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p495,1,which.max)
 n495<-names(r2p495)[z]
 n495<-append(n495, "n495", after = 0)
 
-r2p498<-as.data.frame(cor(p498, method = "spearman")^2)
+r2p498<-as.data.frame(cor(p498, method = "spearman"))
 r2p498<-r2p498[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p498,1,which.max)
 n498<-names(r2p498)[z]
 n498<-append(n498, "n498", after = 0)
 
-r2p556<-as.data.frame(cor(p556, method = "spearman")^2)
+r2p556<-as.data.frame(cor(p556, method = "spearman"))
 r2p556<-r2p556[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p556,1,which.max)
 n556<-names(r2p556)[z]
 n556<-append(n556, "n556", after = 0)
 
-r2p557<-as.data.frame(cor(p557, method = "spearman")^2)
+r2p557<-as.data.frame(cor(p557, method = "spearman"))
 r2p557<-r2p557[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p557,1,which.max)
 n557<-names(r2p557)[z]
 n557<-append(n557, "n557", after = 0)
 
-r2p558<-as.data.frame(cor(p558, method = "spearman")^2)
+r2p558<-as.data.frame(cor(p558, method = "spearman"))
 r2p558<-r2p558[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2p558,1,which.max)
 n558<-names(r2p558)[z]
 n558<-append(n558, "n558", after = 0)
 
-r2pADV<-as.data.frame(cor(pADV, method = "spearman")^2)
+r2pADV<-as.data.frame(cor(pADV, method = "spearman"))
 r2pADV<-r2pADV[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pADV,1,which.max)
 nADV<-names(r2pADV)[z]
 nADV<-append(nADV, "nADV", after = 0)
 
-r2pDSD<-as.data.frame(cor(pDSD, method = "spearman")^2)
+r2pDSD<-as.data.frame(cor(pDSD, method = "spearman"))
 r2pDSD<-r2pDSD[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pDSD,1,which.max)
 nDSD<-names(r2pDSD)[z]
 nDSD<-append(nDSD, "nDSD", after = 0)
 
-r2pISNV<-as.data.frame(cor(pISNV, method = "spearman")^2)
+r2pISNV<-as.data.frame(cor(pISNV, method = "spearman"))
 r2pISNV<-r2pISNV[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pISNV,1,which.max)
 nISNV<-names(r2pISNV)[z]
 nISNV<-append(nISNV, "nISNV", after = 0)
 
-r2pSHV<-as.data.frame(cor(pSHV, method = "spearman")^2)
+r2pSHV<-as.data.frame(cor(pSHV, method = "spearman"))
 r2pSHV<-r2pSHV[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pSHV,1,which.max)
 nSHV<-names(r2pSHV)[z]
@@ -469,25 +469,25 @@ totalprecip<-BRSPdata_all %>%
   dplyr::select(RouteID, Totalab, Aveab, CoV, pres, starts_with("pwt"))
 
 ###correlation matrices for each variable: ------
-r2evd<-as.data.frame(cor(earlyvd, method = "spearman")^2)
+r2evd<-as.data.frame(cor(earlyvd, method = "spearman"))
 r2evd<-r2evd[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2evd,1,which.max)
 nevd<-names(r2evd)[z]
 nevd<-append(nevd, "nevd", after = 0)
 
-r2lvd<-as.data.frame(cor(latevd, method = "spearman")^2)
+r2lvd<-as.data.frame(cor(latevd, method = "spearman"))
 r2lvd<-r2lvd[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2lvd,1,which.max)
 nlvd<-names(r2lvd)[z]
 nlvd<-append(nlvd, "nlvd", after = 0)
 
-r2pwm<-as.data.frame(cor(meanprecip, method = "spearman")^2)
+r2pwm<-as.data.frame(cor(meanprecip, method = "spearman"))
 r2pwm<-r2pwm[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pwm,1,which.max)
 npwm<-names(r2pwm)[z]
 npwm<-append(npwm, "npwm", after = 0)
 
-r2pwt<-as.data.frame(cor(totalprecip, method = "spearman")^2)
+r2pwt<-as.data.frame(cor(totalprecip, method = "spearman"))
 r2pwt<-r2pwt[c(-1, -3, -6:-11),-1:-5]
 z<-apply(r2pwt,1,which.max)
 npwt<-names(r2pwt)[z]
