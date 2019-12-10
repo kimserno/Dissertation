@@ -126,7 +126,7 @@ BRSPab<-BRSPab %>%
   mutate(Totalab = rowSums(.[,4:8])) %>% 
   mutate(Aveab = rowMeans(.[,4:8])) %>% 
   mutate(Stdev = apply(.[,4:8], 1, sd)) %>% 
-  mutate(CoV = Stdev/Aveab)
+  mutate(CoV = (Stdev/Aveab)*100)
 BRSPab$CoV[is.nan(BRSPab$CoV)]<-0
 BRSPab$pres <-0
 BRSPab$pres<- ifelse(BRSPab$Totalab > 0,1,0)
