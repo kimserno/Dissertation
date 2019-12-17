@@ -24,7 +24,7 @@ BRSP_CoV<-BRSP_CoV[,-1:-2]
 BRSP_pres<-read.csv("BRSP_pres.csv")  
 BRSP_pres<-BRSP_pres[,-1:-2]
 
-
+RNGkind(sample.kind = "Rejection")#set.seed to match previous results
 #Nearest Neighbor Classification: ------
 #classification so using presence/absence as dependent variable
 #Normalize variables:
@@ -271,7 +271,7 @@ summary(totab_rpart)
 #plot
 rpart.plot(totab_rpart, digits = 4, fallen.leaves = TRUE, type = 3, extra = 101)
 #model performance:
-totab_pRpart<-predict(totab_rpart, totab_test)
+totab_pRpart<-predict(totab_rpart, totab_test, type = "vector")
 summary(totab_pRpart)
 summary(totab_test$Totalab)
 cor(totab_pRpart, totab_test$Totalab)
@@ -280,10 +280,10 @@ cor(totab_pRpart, totab_test$Totalab)
 MAE<- function(actual, predicted){
   mean(abs(actual - predicted))
 }
-MAE(totab_pRpart, totab_test$Totalab)
+MAE(totab_test$Totalab, totab_pRpart)
 #39.46586
 mean(totab_test$Totalab)
-MAE(47.83333, totab_test$Totalab)
+MAE(totab_test$Totalab,47.83333)
 #60.31481 - MAE of model is better than if we predicted everything was mean of total abundance
 ##Improving model performance:
 set.seed(123)
@@ -297,7 +297,7 @@ cor(totab_pm5p, totab_test$Totalab)
 MAE(totab_pm5p, totab_test$Totalab)
 #37.25361 - MAE improved
 
-MAE(pred, totab_test$Totalab)
+# MAE(pred, totab_test$Totalab)
 
 #cross validation:
 set.seed(123)
@@ -314,7 +314,7 @@ MAE(pred, BRSP_totab$Totalab)
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_totab)
@@ -326,7 +326,7 @@ MAE(pred, BRSP_totab$Totalab)
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_totab)
@@ -339,7 +339,7 @@ MAE(pred, BRSP_totab$Totalab)
 ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-bsbm<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+bsbm<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 bsbm
 summary(m$finalModel)
 pred<-predict(bsbm, BRSP_totab)
@@ -351,14 +351,14 @@ MAE(pred, BRSP_totab$Totalab)
 ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_totab)
 cor(pred, BRSP_totab$Totalab)
-#0.7216157
+#0.8167321
 MAE(pred, BRSP_totab$Totalab)
-#33.38537
+#27.54754
 
 #CoV
 CoV_train<-BRSP_CoV[train_sample, ]
@@ -409,7 +409,7 @@ MAE(pred, BRSP_CoV$CoV)
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_CoV)
@@ -421,7 +421,7 @@ MAE(pred, BRSP_CoV$CoV)
 ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_CoV)
@@ -434,7 +434,7 @@ MAE(pred, BRSP_CoV$CoV)
 ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_CoV)
@@ -446,7 +446,7 @@ MAE(pred, BRSP_CoV$CoV)
 ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
-m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "RMSE", trControl = ctrl, tuneGrid = grid)
+m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
 summary(m$finalModel)
 pred<-predict(m, BRSP_CoV)
@@ -505,10 +505,10 @@ totab_nnm3$result.matrix
 #error = 0.4899430, steps = 3697
 totab_model_results3<-neuralnet::compute(totab_nnm3, totab_n_test[2:30])
 totab_predicted_strength3<-totab_model_results3$net.result
-cor(totab_predicted_strength3, totab_n_test$totab)
-#0.1543845 - correlation has gotten worse
-MAE(totab_predicted_strength3, totab_n_test$totab)
-#0.1240324 - MAE has increased and is higher than if all predicted values = mean CoV
+cor(totab_predicted_strength3, totab_n_test$Totalab)
+#1
+MAE(totab_predicted_strength3, totab_n_test$Totalab)
+#0.0
 
 #CoV
 CoV_n_train<-CoV_n[train_sample, ]
@@ -721,7 +721,7 @@ varImpPlot(totab_rf)
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10)
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(123)
-totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "RMSE", trControl = ctrl, tuneGrid = grid_rf)
+totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "MAE", trControl = ctrl, tuneGrid = grid_rf)
 totabm_rf
 varImpPlot(totabm_rf$finalModel)
 
@@ -740,7 +740,7 @@ varImpPlot(CoV_rf)
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10)
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(123)
-CoVm_rf<-train(CoV ~., data = BRSP_CoV, method = "rf", metric = "RMSE", trControl = ctrl, tuneGrid = grid_rf)
+CoVm_rf<-train(CoV ~., data = BRSP_CoV, method = "rf", metric = "MAE", trControl = ctrl, tuneGrid = grid_rf)
 CoVm_rf
 varImpPlot(CoVm_rf$finalModel)
 
