@@ -721,7 +721,7 @@ varImpPlot(totab_rf)
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10)
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(123)
-totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "MAE", trControl = ctrl, tuneGrid = grid_rf)
+totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf)
 totabm_rf
 varImpPlot(totabm_rf$finalModel)
 
@@ -740,7 +740,7 @@ varImpPlot(CoV_rf)
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10)
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(123)
-CoVm_rf<-train(CoV ~., data = BRSP_CoV, method = "rf", metric = "MAE", trControl = ctrl, tuneGrid = grid_rf)
+CoVm_rf<-train(CoV ~., data = BRSP_CoV, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf)
 CoVm_rf
 varImpPlot(CoVm_rf$finalModel)
 
