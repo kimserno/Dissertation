@@ -1,0 +1,390 @@
+
+
+library(tidyverse)
+library(matrixStats)
+library(plyr)
+library(dplyr)
+library(lubridate)
+library(randomForest)
+library(caret)
+
+
+
+Landcover<-read.csv("Landcover_all.csv")  
+Drought<-read.csv("Drought_all.csv") 
+SurveyCov<-read.csv("SurveyCov.csv")
+BRSPab<-read.csv("BRSP_Data0913.csv")
+
+BRSPdata_all<-BRSPab %>% 
+  left_join(Landcover, by = "RouteID") %>% 
+  left_join(Drought, by = "RouteID") %>% 
+  left_join(SurveyCov, by = "RouteID") 
+
+write.csv(BRSPdata_all, file = "BRSPdata_allextents.csv") 
+
+### Total abundance Optimization with univariate Random forest models. ----
+#p312
+set.seed(123)
+randomForest(Totalab~p312_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p312_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p312_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p312_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p312_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p312_20km, data = BRSPdata_all)
+
+#p316
+set.seed(123)
+randomForest(Totalab~p316_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p316_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p316_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p316_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p316_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p316_20km, data = BRSPdata_all)
+
+#p437
+set.seed(123)
+randomForest(Totalab~p437_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p437_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p437_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p437_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p437_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p437_20km, data = BRSPdata_all)
+
+#p484
+set.seed(123)
+randomForest(Totalab~p484_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p484_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p484_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p484_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p484_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p484_20km, data = BRSPdata_all)
+
+#p485
+set.seed(123)
+randomForest(Totalab~p485_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p485_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p485_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p485_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p485_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p485_20km, data = BRSPdata_all)
+
+#p488
+set.seed(123)
+randomForest(Totalab~p488_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p488_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p488_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p488_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p488_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p488_20km, data = BRSPdata_all)
+
+#p489
+set.seed(123)
+randomForest(Totalab~p489_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p489_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p489_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p489_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p489_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p489_20km, data = BRSPdata_all)
+
+#p490
+set.seed(123)
+randomForest(Totalab~p490_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p490_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p490_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p490_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p490_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p490_20km, data = BRSPdata_all)
+
+#p491
+set.seed(123)
+randomForest(Totalab~p491_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p491_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p491_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p491_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p491_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p491_20km, data = BRSPdata_all)
+
+#p492
+set.seed(123)
+randomForest(Totalab~p492_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p492_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p492_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p492_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p492_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p492_20km, data = BRSPdata_all)
+
+#p493
+set.seed(123)
+randomForest(Totalab~p493_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p493_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p493_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p493_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p493_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p493_20km, data = BRSPdata_all)
+
+#p495
+set.seed(123)
+randomForest(Totalab~p495_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p495_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p495_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p495_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p495_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p495_20km, data = BRSPdata_all)
+
+#p498
+set.seed(123)
+randomForest(Totalab~p498_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p498_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p498_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p498_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p498_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p498_20km, data = BRSPdata_all)
+
+#p556
+set.seed(123)
+randomForest(Totalab~p556_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p556_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p556_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p556_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p556_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p556_20km, data = BRSPdata_all)
+
+#p558
+set.seed(123)
+randomForest(Totalab~p558_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p558_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p558_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p558_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p558_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p558_20km, data = BRSPdata_all)
+
+#p557
+set.seed(123)
+randomForest(Totalab~p557_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p557_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p557_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p557_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p557_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~p557_20km, data = BRSPdata_all)
+
+#pSHV
+set.seed(123)
+randomForest(Totalab~pSHV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pSHV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pSHV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pSHV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pSHV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pSHV_20km, data = BRSPdata_all)
+
+#pDSD
+set.seed(123)
+randomForest(Totalab~pDSD_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pDSD_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pDSD_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pDSD_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pDSD_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pDSD_20km, data = BRSPdata_all)
+
+#pADV
+set.seed(123)
+randomForest(Totalab~pADV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pADV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pADV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pADV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pADV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pADV_20km, data = BRSPdata_all)
+
+#pISNV
+set.seed(123)
+randomForest(Totalab~pISNV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pISNV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pISNV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pISNV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pISNV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pISNV_20km, data = BRSPdata_all)
+
+#earlyvd
+set.seed(123)
+randomForest(Totalab~evd400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~evd1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~evd4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~evd5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~evd8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~evd20km, data = BRSPdata_all)
+
+#latevd
+set.seed(123)
+randomForest(Totalab~lvd400m, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(Totalab~lvd1km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(Totalab~lvd4km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(Totalab~lvd5km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(Totalab~lvd8km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(Totalab~lvd20km, data = BRSPdata_all, na.action=na.omit)
+
+#meanprecip
+set.seed(123)
+randomForest(Totalab~pwm400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwm1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwm4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwm5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwm8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwm20km, data = BRSPdata_all)
+
+#totalprecip
+set.seed(123)
+randomForest(Totalab~pwt400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwt1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwt4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwt5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwt8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(Totalab~pwt20km, data = BRSPdata_all)
+
+### Random forest spatial opt dataframe ----
+
+BRSPrf_so_totab<-BRSPdata_all %>% 
+  dplyr::select(RouteID, Totalab, p312_400m, p316_1km, p437_8km, p484_5km, p485_4km, p488_8km, p489_400m, p490_4km, p491_20km, p492_8km, p493_1km, p495_8km, p498_400m, p556_400m, p557_400m, p558_400m, pADV_4km, pDSD_8km, pISNV_400m, pSHV_20km, evd20km, lvd400m, pwm20km, pwt20km, countobs, mean_temp, prop_quality, msday, mean_noise)
+
+BRSP_rftotab<-BRSPrf_so_totab[,-1]
+
+### random forest model ------
+ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10, selectionFunction = "oneSE")
+grid_rf<-expand.grid(.mtry = c(2,5,10,29))
+set.seed(1231)
+totabm_rf_rfso<-train(Totalab ~., data = BRSP_rftotab, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf, na.action=na.omit)
+totabm_rf_rfso
+varImpPlot(totabm_rf_rfso$finalModel)
+
+#### Spearman's Correlation rf model ------
+BRSP_totab<-read.csv("BRSP_totab.csv")
+BRSP_totab<-BRSP_totab[,-1:-2]#remove first 2 rows as they identify the observations and not needed in the analysis 
+
+#evaluate performance:
+ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10, selectionFunction = "oneSE")
+grid_rf<-expand.grid(.mtry = c(2,5,10,29))
+set.seed(1231)
+totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf)
+totabm_rf
+varImpPlot(totabm_rf$finalModel)
+
+
+
