@@ -311,7 +311,7 @@ MAE(pred, BRSP_totab$Totalab)
 #36.1603
 
 #control object:
-ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
+ctrl<-trainControl(method = "cv", number = 10, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
 m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
@@ -322,8 +322,10 @@ cor(pred, BRSP_totab$Totalab)
 #0.7216157
 MAE(pred, BRSP_totab$Totalab)
 #33.38537
+m$finalModel
+rpart.plot(m$finalModel, type = 3, extra = 101)
 
-ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
+ctrl<-trainControl(method = "cv", number = 10, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
 m<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
@@ -336,17 +338,18 @@ MAE(pred, BRSP_totab$Totalab)
 #33.38537
 
 #bootstrapping:
-ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
+ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
 bsbm<-train(Totalab ~ ., data = BRSP_totab, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 bsbm
-summary(m$finalModel)
+summary(bsbm$finalModel)
 pred<-predict(bsbm, BRSP_totab)
 cor(pred, BRSP_totab$Totalab)
 #0.8167321
 MAE(pred, BRSP_totab$Totalab)
 #27.54754
+rpart.plot(bsbm$finalModel, type = 3, extra = 101)
 
 ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
@@ -406,8 +409,8 @@ MAE(pred, BRSP_CoV$CoV)
 #0.3372078
 
 #control object:
-ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "best")
-grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
+ctrl<-trainControl(method = "cv", number = 10, selectionFunction = "best")
+grid<-expand.grid(cp = c(0.01, 0.05, 0.1))
 set.seed(123)
 m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
 m
@@ -417,8 +420,10 @@ cor(pred, BRSP_CoV$CoV)
 #0.3535036
 MAE(pred, BRSP_CoV$CoV)
 #0.2756712
+m$finalModel
+rpart.plot(m$finalModel, type = 3, extra = 101)
 
-ctrl<-trainControl(method = "cv", number = 25, selectionFunction = "oneSE")
+ctrl<-trainControl(method = "cv", number = 10, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
 m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
@@ -431,7 +436,7 @@ MAE(pred, BRSP_CoV$CoV)
 #0.2756712
 
 #bootstrapping:
-ctrl<-trainControl(method = "boot", number = 10, selectionFunction = "best")
+ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "best")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
 set.seed(123)
 m<-train(CoV ~ ., data = BRSP_CoV, method = "rpart", metric = "MAE", trControl = ctrl, tuneGrid = grid)
@@ -442,6 +447,7 @@ cor(pred, BRSP_CoV$CoV)
 #0.3535036
 MAE(pred, BRSP_CoV$CoV)
 #0.2756712
+rpart.plot(m$finalModel, type = 3, extra = 101)
 
 ctrl<-trainControl(method = "boot", number = 25, selectionFunction = "oneSE")
 grid<-expand.grid(cp = c(0.01, 0.05, 0.1, 0.15))
