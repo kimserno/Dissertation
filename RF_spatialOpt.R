@@ -23,6 +23,7 @@ BRSPdata_all<-BRSPab %>%
 write.csv(BRSPdata_all, file = "BRSPdata_allextents.csv") 
 
 ### Total abundance Optimization with univariate Random forest models. ----
+
 #p312
 set.seed(123)
 randomForest(Totalab~p312_400m, data = BRSPdata_all)
@@ -359,14 +360,14 @@ randomForest(Totalab~pwt8km, data = BRSPdata_all)
 set.seed(123)
 randomForest(Totalab~pwt20km, data = BRSPdata_all)
 
-### Random forest spatial opt dataframe ----
+#### Total abundance Random forest spatial opt dataframe ----
 
 BRSPrf_so_totab<-BRSPdata_all %>% 
   dplyr::select(RouteID, Totalab, p312_400m, p316_1km, p437_8km, p484_5km, p485_4km, p488_8km, p489_400m, p490_4km, p491_20km, p492_8km, p493_1km, p495_8km, p498_400m, p556_400m, p557_400m, p558_400m, pADV_4km, pDSD_8km, pISNV_400m, pSHV_20km, evd20km, lvd400m, pwm20km, pwt20km, countobs, mean_temp, prop_quality, msday, mean_noise)
 
 BRSP_rftotab<-BRSPrf_so_totab[,-1]
 
-### random forest model ------
+### random forest model totab ------
 ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10, selectionFunction = "oneSE")
 grid_rf<-expand.grid(.mtry = c(2,5,10,29))
 set.seed(1231)
@@ -374,7 +375,7 @@ totabm_rf_rfso<-train(Totalab ~., data = BRSP_rftotab, method = "rf", metric = "
 totabm_rf_rfso
 varImpPlot(totabm_rf_rfso$finalModel)
 
-#### Spearman's Correlation rf model ------
+#### Spearman's Correlation rf model totab ------
 BRSP_totab<-read.csv("BRSP_totab.csv")
 BRSP_totab<-BRSP_totab[,-1:-2]#remove first 2 rows as they identify the observations and not needed in the analysis 
 
@@ -385,6 +386,374 @@ set.seed(1231)
 totabm_rf<-train(Totalab ~., data = BRSP_totab, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf)
 totabm_rf
 varImpPlot(totabm_rf$finalModel)
+
+
+
+#### Coefficient of variation Optimization with univariate Random forest models. ----
+#p312
+set.seed(123)
+randomForest(CoV~p312_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p312_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p312_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p312_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p312_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p312_20km, data = BRSPdata_all)
+
+#p316
+set.seed(123)
+randomForest(CoV~p316_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p316_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p316_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p316_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p316_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p316_20km, data = BRSPdata_all)
+
+#p437
+set.seed(123)
+randomForest(CoV~p437_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p437_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p437_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p437_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p437_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p437_20km, data = BRSPdata_all)
+
+#p484
+set.seed(123)
+randomForest(CoV~p484_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p484_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p484_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p484_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p484_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p484_20km, data = BRSPdata_all)
+
+#p485
+set.seed(123)
+randomForest(CoV~p485_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p485_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p485_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p485_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p485_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p485_20km, data = BRSPdata_all)
+
+#p488
+set.seed(123)
+randomForest(CoV~p488_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p488_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p488_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p488_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p488_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p488_20km, data = BRSPdata_all)
+
+#p489
+set.seed(123)
+randomForest(CoV~p489_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p489_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p489_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p489_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p489_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p489_20km, data = BRSPdata_all)
+
+#p490
+set.seed(123)
+randomForest(CoV~p490_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p490_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p490_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p490_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p490_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p490_20km, data = BRSPdata_all)
+
+#p491
+set.seed(123)
+randomForest(CoV~p491_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p491_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p491_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p491_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p491_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p491_20km, data = BRSPdata_all)
+
+#p492
+set.seed(123)
+randomForest(CoV~p492_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p492_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p492_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p492_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p492_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p492_20km, data = BRSPdata_all)
+
+#p493
+set.seed(123)
+randomForest(CoV~p493_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p493_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p493_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p493_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p493_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p493_20km, data = BRSPdata_all)
+
+#p495
+set.seed(123)
+randomForest(CoV~p495_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p495_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p495_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p495_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p495_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p495_20km, data = BRSPdata_all)
+
+#p498
+set.seed(123)
+randomForest(CoV~p498_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p498_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p498_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p498_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p498_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p498_20km, data = BRSPdata_all)
+
+#p556
+set.seed(123)
+randomForest(CoV~p556_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p556_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p556_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p556_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p556_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p556_20km, data = BRSPdata_all)
+
+#p558
+set.seed(123)
+randomForest(CoV~p558_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p558_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p558_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p558_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p558_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p558_20km, data = BRSPdata_all)
+
+#p557
+set.seed(123)
+randomForest(CoV~p557_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p557_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p557_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p557_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p557_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~p557_20km, data = BRSPdata_all)
+
+#pSHV
+set.seed(123)
+randomForest(CoV~pSHV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pSHV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pSHV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pSHV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pSHV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pSHV_20km, data = BRSPdata_all)
+
+#pDSD
+set.seed(123)
+randomForest(CoV~pDSD_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pDSD_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pDSD_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pDSD_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pDSD_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pDSD_20km, data = BRSPdata_all)
+
+#pADV
+set.seed(123)
+randomForest(CoV~pADV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pADV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pADV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pADV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pADV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pADV_20km, data = BRSPdata_all)
+
+#pISNV
+set.seed(123)
+randomForest(CoV~pISNV_400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pISNV_1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pISNV_4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pISNV_5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pISNV_8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pISNV_20km, data = BRSPdata_all)
+
+#earlyvd
+set.seed(123)
+randomForest(CoV~evd400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~evd1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~evd4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~evd5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~evd8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~evd20km, data = BRSPdata_all)
+
+#latevd
+set.seed(123)
+randomForest(CoV~lvd400m, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(CoV~lvd1km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(CoV~lvd4km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(CoV~lvd5km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(CoV~lvd8km, data = BRSPdata_all, na.action=na.omit)
+set.seed(123)
+randomForest(CoV~lvd20km, data = BRSPdata_all, na.action=na.omit)
+
+
+#meanprecip
+set.seed(123)
+randomForest(CoV~pwm400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwm1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwm4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwm5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwm8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwm20km, data = BRSPdata_all)
+
+#totalprecip
+set.seed(123)
+randomForest(CoV~pwt400m, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwt1km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwt4km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwt5km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwt8km, data = BRSPdata_all)
+set.seed(123)
+randomForest(CoV~pwt20km, data = BRSPdata_all)
+
+
+### Random forest spatial opt dataframe ----
+
+BRSPrf_so_CoV<-BRSPdata_all %>% 
+  dplyr::select(RouteID, CoV, p312_20km, p316_5km, p437_8km, p484_4km, p485_400m, p488_5km, p489_20km, p490_20km, p491_1km, p492_5km, p493_4km, p495_20km, p498_4km, p556_8km, p557_400m, p558_1km, pADV_1km, pDSD_4km, pISNV_400m, pSHV_4km, evd20km, lvd1km, pwm5km, pwt5km, countobs, mean_temp, prop_quality, msday, mean_noise)
+
+BRSP_rfCoV<-BRSPrf_so_CoV[,-1]
+
+### random forest model ------
+ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10, selectionFunction = "oneSE")
+grid_rf<-expand.grid(.mtry = c(2,5,10,29))
+set.seed(1231)
+CoVm_rf_rfso<-train(CoV ~., data = BRSP_rfCoV, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf, na.action=na.omit)
+CoVm_rf_rfso
+varImpPlot(CoVm_rf_rfso$finalModel)
+
+#### Spearman's Correlation rf model ------
+BRSP_CoV<-read.csv("BRSP_CoV.csv")
+BRSP_CoV<-BRSP_CoV[,-1:-2]#remove first 2 rows as they identify the observations and not needed in the analysis 
+
+#evaluate performance:
+ctrl<- trainControl(method = "repeatedcv", number = 10, repeats = 10, selectionFunction = "oneSE")
+grid_rf<-expand.grid(.mtry = c(2,5,10,29))
+set.seed(1231)
+CoVm_rf<-train(CoV ~., data = BRSP_CoV, method = "rf", metric = "MAE", trControl = ctrl, importance=TRUE, tuneGrid = grid_rf)
+CoVm_rf
+varImpPlot(CoVm_rf$finalModel)
 
 
 
